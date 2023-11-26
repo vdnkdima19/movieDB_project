@@ -25,6 +25,7 @@ class NewReviewCell: UITableViewCell {
     
     var mark: Int = 0
     var commentStr: String = ""
+    var filmName: String = ""
     
     let sendButton = UIButton()
     
@@ -43,7 +44,8 @@ class NewReviewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    public func configCell() {
+    public func configCell(filmName: String) {
+        self.filmName = filmName
         self.addSubview(commentTextField)
         self.addSubview(raitingStackView)
         self.addSubview(sendButton)
@@ -149,38 +151,38 @@ class NewReviewCell: UITableViewCell {
     
     @objc private func sendButtonTapped(_ sender: UIButton) {
         let realm = try! Realm()
-            
-            textFieldDidEndEditing(commentTextField)
-            
-            let newComment = Comments()
-            newComment.text = commentStr
-            newComment.userName = LoginUser.shared.user?.username ?? ""
-            newComment.filmId = SellectedMoview.moview?.id ?? 0
-            newComment.mark = mark
-            newComment.id = realm.objects(Comments.self).count
-            
-            // Збереження об'єкту User в Realm
-            try! realm.write {
-                realm.add(newComment)
-            }
-
-            // Show alert
-            let alertController = UIAlertController(title: "Review Submitted",
-                                                      message: "Thank you for your review!",
-                                                      preferredStyle: .alert)
-            
-            let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-                self?.commentTextField.text = ""
-                self?.commentStr = ""
-                self?.defaultConfigStars()
-            }
-            
-            alertController.addAction(okayAction)
-            
-            // Present the alert controller
-            if let viewController = UIApplication.shared.keyWindow?.rootViewController {
-                viewController.present(alertController, animated: true, completion: nil)
-            }
+        
+        textFieldDidEndEditing(commentTextField)
+        
+        let newComment = Comments()
+        newComment.text = commentStr
+        newComment.userName = LoginUser.shared.user?.username ?? ""
+        newComment.filmId = SellectedMoview.moview?.id ?? 0
+        newComment.mark = mark
+        newComment.id = realm.objects(Comments.self).count
+        newComment.filmName = self.filmName
+        // Збереження об'єкту User в Realm
+        try! realm.write {
+            realm.add(newComment)
+        }
+        
+        // Show alert
+        let alertController = UIAlertController(title: "Review Submitted",
+                                                message: "Thank you for your review!",
+                                                preferredStyle: .alert)
+        
+        let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.commentTextField.text = ""
+            self?.commentStr = ""
+            self?.defaultConfigStars()
+        }
+        
+        alertController.addAction(okayAction)
+        
+        // Present the alert controller
+        if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+            viewController.present(alertController, animated: true, completion: nil)
+        }
     }
     
     @objc private func starIsTapped(_ sender: UITapGestureRecognizer) {

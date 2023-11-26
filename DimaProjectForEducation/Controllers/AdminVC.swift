@@ -56,6 +56,17 @@ class AdminVC: UIViewController {
 }
 
 extension AdminVC: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let sectionCastomView = UIView()
+        let sectionNameLabel = UILabel(frame: CGRect(x: 16, y: 0,width: Int(tableView.frame.width - 16), height: 30))
+        sectionCastomView.addSubview(sectionNameLabel)
+        sectionCastomView.backgroundColor = .darkBlue
+        sectionNameLabel.text = "NEW COMMENTS"
+        sectionNameLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        sectionNameLabel.textAlignment = .left
+        sectionNameLabel.textColor = .white
+        return sectionCastomView
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         commentsArr.count
     }

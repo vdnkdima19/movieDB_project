@@ -124,20 +124,17 @@ class ReviewCell: UITableViewCell {
         if let author = reviewResult.author {
             authorName.text = author
         }
-        
         if let avatarPath = reviewResult.author_details?.avatar_path {
             setAvatarImage(avatarPath)
         } else {
             avatarImage.image = UIImage(systemName: "person.circle.fill")
         }
-        
         let rating = reviewResult.author_details?.rating
         setStarRating(rating)
-        
         if let content = reviewResult.content {
             authorComment.text = content
         }
-        
+
         if let createdAt = reviewResult.created_at {
             setDateInFormat(createdAt)
         }

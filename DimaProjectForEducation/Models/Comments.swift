@@ -10,5 +10,7 @@ class Comments: Object {
     @objc dynamic var mark: Int = 0
     @objc dynamic var date: Date = Date(timeIntervalSinceNow: 0)
     @objc dynamic var id: Int = 0
+    @objc dynamic var isCheckedNotification: Bool = false
+    @objc dynamic var filmName: String = ""
 }
 

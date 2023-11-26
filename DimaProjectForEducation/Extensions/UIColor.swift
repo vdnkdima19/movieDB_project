@@ -9,4 +9,5 @@ extension UIColor {
     static let changeImageColor = UIColor(#colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1))
     static let selectedBorderColor = UIColor.blue.cgColor
     static let defaultBorderColor = UIColor.black.cgColor
+    static let greenColor = UIColor(named: "green")
 }

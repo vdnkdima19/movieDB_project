@@ -612,7 +612,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     }
     @objc private func viewAllReviewButtonTapped() {
 
-        let reviewvc = ReviewsVC(reviews: reviews)
+        let reviewvc = ReviewsVC(reviews: reviews, filmName: filmInfo?.title ?? "")
         navigationController?.pushViewController(reviewvc, animated: true)
     }
     

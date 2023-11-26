@@ -3,6 +3,7 @@ import Alamofire
 
 class ReviewsVC: UIViewController, ReviewsVCProtocol {
     internal var reviews: [ReviewResult] = []
+    var filmName: String = ""
     
     private var commentsTable: UITableView = {  // Коментарі до фільму
         let tableView = UITableView()
@@ -35,9 +36,10 @@ class ReviewsVC: UIViewController, ReviewsVCProtocol {
     
     /// При ініціалізації передається id фільму для завантаження данних
     
-    init(reviews: [ReviewResult]) {
+    init(reviews: [ReviewResult], filmName: String) {
         super.init(nibName: nil, bundle: nil)
         self.reviews = reviews
+        self.filmName = filmName
     }
     
     required init?(coder: NSCoder) {
@@ -104,6 +106,7 @@ class ReviewsVC: UIViewController, ReviewsVCProtocol {
         
         setupElements()
         setupConstraints()
+        print("filmName: \(filmName)")
      }
     
     
@@ -165,7 +168,7 @@ extension ReviewsVC: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "NewReviewCell", for: indexPath) as? NewReviewCell {
-                cell.configCell()
+                cell.configCell(filmName: filmName)
                 return cell
             }
         }

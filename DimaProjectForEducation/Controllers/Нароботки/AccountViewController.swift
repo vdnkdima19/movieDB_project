@@ -115,7 +115,7 @@ class AccountViewController: UIViewController {
         ])
     }
     private func configHelpButton() {
-        helpFaqButton.setTitle("Help/FAQ", for: .normal)
+        helpFaqButton.setTitle(LoginUser.shared.user!.isAdmin ? "Chats" : "Help/FAQ", for: .normal)
         //privacyImage.image = UIImage(named: "ImagePrivacy")
         helpFaqButton.backgroundColor = .blueGray
         helpFaqButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
@@ -138,7 +138,11 @@ class AccountViewController: UIViewController {
         navigationController?.pushViewController(LoginVC(), animated: true)
     }
     @objc private func HelpFAQTapped() {
-        navigationController?.pushViewController(HelpFAQViewController(), animated: true)
+        if LoginUser.shared.user!.isAdmin {
+            navigationController?.pushViewController(ChatsViewController(), animated: true)
+        } else {
+            navigationController?.pushViewController(HelpFAQViewController(userName: LoginUser.shared.user!.username, adminName: "Admin"), animated: true)
+        }
     }
     private func configAccountInformation(){
         accountInformationButton.setTitle("Account Information", for: .normal)

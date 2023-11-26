@@ -25,6 +25,9 @@ class AdminCommentsTableViewCell: UITableViewCell {
         self.comment = comment
         addSubViews()
         setConstraints()
+        [approvedButton, rejectButton, bannedButton].forEach {
+            $0.layer.cornerRadius = 12
+        }
         addTargetsForElements()
         visualConfig(user: comment.userName, comment: comment.text)
     }
@@ -83,7 +86,7 @@ class AdminCommentsTableViewCell: UITableViewCell {
         userLabel.textColor = .white
         commentLabel.textColor = .white
         
-        approvedButton.backgroundColor = .green
+        approvedButton.backgroundColor = .greenColor
         bannedButton.backgroundColor = .backgroundColorLaunchScreen
         rejectButton.backgroundColor = .darkGray
         [approvedButton, bannedButton,rejectButton].forEach {
@@ -97,6 +100,7 @@ class AdminCommentsTableViewCell: UITableViewCell {
     private func addTargetsForElements() {
         approvedButton.addTarget(self, action: #selector(approvedButtonIsPressed), for: .touchUpInside)
         bannedButton.addTarget(self, action: #selector(bannedButtonIsPressed), for: .touchUpInside)
+        rejectButton.addTarget(self, action: #selector(rejectButtonIsPressed), for: .touchUpInside)
     }
     
     @objc private func approvedButtonIsPressed(_ sender: UIButton) {
@@ -145,7 +149,23 @@ class AdminCommentsTableViewCell: UITableViewCell {
             }
             adminVC.commentsTableView.reloadData()
         }
-        
     }
-    
+    @objc private func rejectButtonIsPressed(_ sender: UIButton) {
+        let realm = try! Realm()
+            let findedComment = realm.objects(Comments.self).first(where: {
+                $0.id == self.comment.id
+            })
+            try! realm.write {
+                findedComment?.status = -1
+            }
+            
+            let comments = realm.objects(Comments.self).where({
+                $0.status == 0
+            })
+            adminVC.commentsArr = []
+            comments.forEach {
+                adminVC.commentsArr.append($0)
+            }
+            adminVC.commentsTableView.reloadData()
+    }
 }
