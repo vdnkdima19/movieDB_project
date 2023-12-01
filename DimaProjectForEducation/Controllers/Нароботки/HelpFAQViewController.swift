@@ -123,15 +123,14 @@ extension HelpFAQViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if LoginUser.shared.user!.isAdmin {
+        let message = messagesArray[indexPath.row]
+        if LoginUser.shared.user!.isAdmin && message.isAdmin {
             if let cell = chatTableView.dequeueReusableCell(withIdentifier: "CurrentUserMessageTableViewCell", for: indexPath) as? CurrentUserMessageTableViewCell {
-                let message = messagesArray[indexPath.row]
                 cell.configCell(message: message.text)
                 return cell
             }
         } else {
             if let cell = chatTableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell", for: indexPath) as? MessageTableViewCell {
-                let message = messagesArray[indexPath.row]
                 cell.configCell(message: message.text)
                 return cell
             }
