@@ -152,6 +152,12 @@ class UpdateLoginViewController: UIViewController {
             return
         }
         let realm = try! Realm()
+        let comments = realm.objects(ChatMessage.self).filter("user == %@", LoginUser.shared.user?.username ?? "")
+        for comment in comments {
+            try! realm.write {
+                comment.user = newUsername
+            }
+        }
         if let currentUser = realm.objects(User.self).filter("username == %@", LoginUser.shared.user?.username ?? "").first {
             try! realm.write {
                 currentUser.username = newUsername

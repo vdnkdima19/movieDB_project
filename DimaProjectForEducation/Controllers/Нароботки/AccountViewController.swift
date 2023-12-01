@@ -195,11 +195,11 @@ class AccountViewController: UIViewController {
         if LoginUser.shared.user?.isAdmin ?? false {
             profileLabel.text = "Profile of Admin"
             userNameLabel.text = LoginUser.shared.user?.username
-            avatarImage.image = UIImage(data: LoginUser.shared.user?.avatarImageData ?? Data()) ?? UIImage(systemName: "person.badge.key")
+            avatarImage.image = UIImage(data: LoginUser.shared.user?.avatarImageData ?? Data()) ?? UIImage(systemName: "person.circle.fill")
         }
         else {
             profileLabel.text = "Profile of User"
-            avatarImage.image = UIImage(data: LoginUser.shared.user?.avatarImageData ?? Data()) ?? UIImage(systemName: "person.badge.key")
+            avatarImage.image = UIImage(data: LoginUser.shared.user?.avatarImageData ?? Data()) ?? UIImage(systemName: "person.circle.fill")
             userNameLabel.text = LoginUser.shared.user?.username
         }
     }
