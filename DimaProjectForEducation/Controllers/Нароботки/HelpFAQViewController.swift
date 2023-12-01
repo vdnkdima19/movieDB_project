@@ -38,6 +38,7 @@ class HelpFAQViewController: UIViewController {
         chatTableView.delegate = self
         chatTableView.dataSource = self
         chatTableView.register(MessageTableViewCell.self, forCellReuseIdentifier: "MessageTableViewCell")
+        chatTableView.register(CurrentUserMessageTableViewCell.self, forCellReuseIdentifier: "CurrentUserMessageTableViewCell")
         chatTableView.separatorStyle = .none
         sendButton.addTarget(self, action: #selector(sendButtonIsPressed), for: .touchUpInside)
     }
@@ -122,12 +123,18 @@ extension HelpFAQViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = chatTableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell", for: indexPath) as? MessageTableViewCell {
-            let message = messagesArray[indexPath.row]
-            
-            cell.configCell(isCurrentUser: message.isAdmin == LoginUser.shared.user!.isAdmin, message: message.text)
-            
-            return cell
+        if LoginUser.shared.user!.isAdmin {
+            if let cell = chatTableView.dequeueReusableCell(withIdentifier: "CurrentUserMessageTableViewCell", for: indexPath) as? CurrentUserMessageTableViewCell {
+                let message = messagesArray[indexPath.row]
+                cell.configCell(message: message.text)
+                return cell
+            }
+        } else {
+            if let cell = chatTableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell", for: indexPath) as? MessageTableViewCell {
+                let message = messagesArray[indexPath.row]
+                cell.configCell(message: message.text)
+                return cell
+            }
         }
         
         return UITableViewCell()

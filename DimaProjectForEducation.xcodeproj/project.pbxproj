@@ -78,6 +78,7 @@
 		63685E1D2B13C88F00142EC0 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63685E1C2B13C88F00142EC0 /* ChatMessage.swift */; };
 		63685E1F2B13CFBD00142EC0 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63685E1E2B13CFBD00142EC0 /* MessageTableViewCell.swift */; };
 		63685E212B13E0B200142EC0 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63685E202B13E0B200142EC0 /* ChatsViewController.swift */; };
+		63CF21232B1741290000120C /* CurrentUserMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CF21222B1741290000120C /* CurrentUserMessageTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,6 +151,7 @@
 		63685E1C2B13C88F00142EC0 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		63685E1E2B13CFBD00142EC0 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		63685E202B13E0B200142EC0 /* ChatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
+		63CF21222B1741290000120C /* CurrentUserMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserMessageTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +238,7 @@
 				63685D982B13817E00142EC0 /* ReviewCell.swift */,
 				63685E1A2B13940700142EC0 /* NotificationCell.swift */,
 				63685E1E2B13CFBD00142EC0 /* MessageTableViewCell.swift */,
+				63CF21222B1741290000120C /* CurrentUserMessageTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				63685E1D2B13C88F00142EC0 /* ChatMessage.swift in Sources */,
 				63685DCC2B13817E00142EC0 /* GenreVC.swift in Sources */,
 				63685DD62B13819E00142EC0 /* CustomSegmentControl.swift in Sources */,
+				63CF21232B1741290000120C /* CurrentUserMessageTableViewCell.swift in Sources */,
 				63685DF72B1381B900142EC0 /* MovieFrames.swift in Sources */,
 				63685DCF2B13817E00142EC0 /* TraillersVCProtocol.swift in Sources */,
 				63685DD12B13817E00142EC0 /* LoginViewControllerProtocol.swift in Sources */,
