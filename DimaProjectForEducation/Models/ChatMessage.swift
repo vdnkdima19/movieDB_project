@@ -7,5 +7,5 @@ class ChatMessage: Object {
     @objc dynamic var text: String = ""
     @objc dynamic var messageId: Int = 0
     @objc dynamic var isAdmin: Bool = false
-
+    @objc dynamic var date: Date = Date(timeIntervalSinceNow: 0)
 }
