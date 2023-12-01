@@ -189,16 +189,17 @@ class AccountViewController: UIViewController {
         avatarImage.tintColor = .white
         avatarImage.layer.cornerRadius = 45
         avatarImage.backgroundColor = .black
+        avatarImage.clipsToBounds = true
     }
     private func setConfigOfAccess(){
         if LoginUser.shared.user?.isAdmin ?? false {
             profileLabel.text = "Profile of Admin"
             userNameLabel.text = LoginUser.shared.user?.username
-            avatarImage.image = UIImage(systemName: "person.badge.key")
+            avatarImage.image = UIImage(data: LoginUser.shared.user?.avatarImageData ?? Data()) ?? UIImage(systemName: "person.badge.key")
         }
         else {
             profileLabel.text = "Profile of User"
-            avatarImage.image = UIImage(systemName: "person.circle.fill")
+            avatarImage.image = UIImage(data: LoginUser.shared.user?.avatarImageData ?? Data()) ?? UIImage(systemName: "person.badge.key")
             userNameLabel.text = LoginUser.shared.user?.username
         }
     }

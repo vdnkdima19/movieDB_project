@@ -6,6 +6,6 @@ class User: Object {
     @objc dynamic var password: String = ""
     @objc dynamic var isAdmin: Bool = false
     @objc dynamic var isBanned: Bool = false
-    @objc dynamic var avatarImageName: String = ""
+    @objc dynamic var avatarImageData: Data = Data()
 }
 

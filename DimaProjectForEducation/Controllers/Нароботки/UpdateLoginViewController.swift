@@ -29,6 +29,11 @@ class UpdateLoginViewController: UIViewController {
         configLabels()
         configSaveChangeButton()
         configChangePasswordButton()
+        addTargetsForElements()
+    }
+    
+    private func addTargetsForElements() {
+        changeImageButton.addTarget(self, action: #selector(changeImageButtonIsPressed), for: .touchUpInside)
     }
     
     private func addSubViews() {
@@ -105,9 +110,10 @@ class UpdateLoginViewController: UIViewController {
         avatarImage.tintColor = .white
         avatarImage.layer.cornerRadius = 45
         avatarImage.backgroundColor = .black
+        avatarImage.clipsToBounds = true
     }
     
-   
+    
     
     private func configChangeImageButton(){
         changeImageButton.setTitle("Change Photo", for: .normal)
@@ -135,7 +141,7 @@ class UpdateLoginViewController: UIViewController {
     
     private func setConfigOfAccess(){
         if LoginUser.shared.user?.isAdmin ?? false {
-            avatarImage.image = UIImage(systemName: "person.badge.key")
+            avatarImage.image = UIImage(data: LoginUser.shared.user?.avatarImageData ?? Data()) ?? UIImage(systemName: "person.badge.key")
         }
         else {
             avatarImage.image = UIImage(systemName: "person.circle.fill")
@@ -169,6 +175,13 @@ class UpdateLoginViewController: UIViewController {
     @objc private func changePasswordIsPressed(_ gesture: UITapGestureRecognizer) {
         navigationController?.show(ChangePasswordViewController(), sender: nil)
     }
+    
+    @objc private func changeImageButtonIsPressed(_ sender: UIButton) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true, completion: nil)
+    }
 }
 extension UpdateLoginViewController: UITextFieldDelegate {
     /// Приховує іконку поля коли користувач починає взаємодію з полем
@@ -200,3 +213,24 @@ extension UpdateLoginViewController: UITextFieldDelegate {
     }
 }
 
+extension UpdateLoginViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if info[.originalImage] is UIImage {
+            if let selectedImage = info[.originalImage] as? UIImage {
+                let realm = try! Realm()
+                guard let currentUser = realm.objects(User.self).filter("username == %@", LoginUser.shared.user?.username ?? "").first else {
+                    return
+                }
+                try! realm.write {
+                    currentUser.avatarImageData = selectedImage.jpegData(compressionQuality: 1) ?? Data()
+                }
+                avatarImage.image = selectedImage
+            }
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+}

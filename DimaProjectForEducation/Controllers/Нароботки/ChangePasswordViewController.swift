@@ -49,12 +49,12 @@ class ChangePasswordViewController: UIViewController {
             passwordFieldIcon.centerYAnchor.constraint(equalTo: oldPasswordField.centerYAnchor),
             passwordFieldIcon.leadingAnchor.constraint(equalTo: oldPasswordField.leadingAnchor, constant: 15)
         ])
-         NSLayoutConstraint.activate([
-             newPasswordLabel.bottomAnchor.constraint(equalTo: newPasswordField.topAnchor),
-             newPasswordLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-             newPasswordLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-             newPasswordLabel.heightAnchor.constraint(equalToConstant: 50)
-         ])
+        NSLayoutConstraint.activate([
+            newPasswordLabel.bottomAnchor.constraint(equalTo: newPasswordField.topAnchor),
+            newPasswordLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            newPasswordLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            newPasswordLabel.heightAnchor.constraint(equalToConstant: 50)
+        ])
         NSLayoutConstraint.activate([
             newPasswordField.topAnchor.constraint(equalTo: self.oldPasswordField.bottomAnchor, constant: 60),
             newPasswordField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
@@ -122,66 +122,66 @@ class ChangePasswordViewController: UIViewController {
     }
     @objc private func saveChangeButtonTapped(_ sender: UIButton) {
         guard
-                let oldPassword = oldPasswordField.text,
-                let newPassword = newPasswordField.text,
-                let reTypePassword = reTypePasswordField.text,
-                !oldPassword.isEmpty,
-                !newPassword.isEmpty,
-                !reTypePassword.isEmpty
-            else {
-                return
-            }
-
-            let realm = try! Realm()
-            guard let currentUser = realm.objects(User.self).filter("username == %@", LoginUser.shared.user?.username ?? "").first else {
-                return
-            }
-
-            if currentUser.password == oldPassword {
-                if newPassword == reTypePassword {
-                    if oldPassword == newPassword {
-                        let alertController = UIAlertController(title: "Warning",
-                                                                message: "Old password and new password are the same",
-                                                                preferredStyle: .alert)
-
-                        let okayAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                        alertController.addAction(okayAction)
-                        present(alertController, animated: true, completion: nil)
-                    } else {
-                        try! realm.write {
-                            currentUser.password = newPassword
-                        }
-                        let alertController = UIAlertController(title: "Successfully",
-                                                                message: "Password changed successfully",
-                                                                preferredStyle: .alert)
-
-                        let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-                            self?.oldPasswordField.text = ""
-                            self?.newPasswordField.text = ""
-                            self?.reTypePasswordField.text = ""
-                            self?.navigationController?.popViewController(animated: true)
-                        }
-                        alertController.addAction(okayAction)
-                        present(alertController, animated: true, completion: nil)
-                    }
-                } else {
-                    let alertController = UIAlertController(title: "Error",
-                                                            message: "New password and the re-type password are not the same",
+            let oldPassword = oldPasswordField.text,
+            let newPassword = newPasswordField.text,
+            let reTypePassword = reTypePasswordField.text,
+            !oldPassword.isEmpty,
+            !newPassword.isEmpty,
+            !reTypePassword.isEmpty
+        else {
+            return
+        }
+        
+        let realm = try! Realm()
+        guard let currentUser = realm.objects(User.self).filter("username == %@", LoginUser.shared.user?.username ?? "").first else {
+            return
+        }
+        
+        if currentUser.password == oldPassword {
+            if newPassword == reTypePassword {
+                if oldPassword == newPassword {
+                    let alertController = UIAlertController(title: "Warning",
+                                                            message: "Old password and new password are the same",
                                                             preferredStyle: .alert)
-
-                    let okayAction = UIAlertAction(title: "Retry", style: .default, handler: nil)
+                    
+                    let okayAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okayAction)
+                    present(alertController, animated: true, completion: nil)
+                } else {
+                    try! realm.write {
+                        currentUser.password = newPassword
+                    }
+                    let alertController = UIAlertController(title: "Successfully",
+                                                            message: "Password changed successfully",
+                                                            preferredStyle: .alert)
+                    
+                    let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                        self?.oldPasswordField.text = ""
+                        self?.newPasswordField.text = ""
+                        self?.reTypePasswordField.text = ""
+                        self?.navigationController?.popViewController(animated: true)
+                    }
                     alertController.addAction(okayAction)
                     present(alertController, animated: true, completion: nil)
                 }
             } else {
                 let alertController = UIAlertController(title: "Error",
-                                                        message: "Old password is incorrect",
+                                                        message: "New password and the re-type password are not the same",
                                                         preferredStyle: .alert)
-
+                
                 let okayAction = UIAlertAction(title: "Retry", style: .default, handler: nil)
                 alertController.addAction(okayAction)
                 present(alertController, animated: true, completion: nil)
             }
+        } else {
+            let alertController = UIAlertController(title: "Error",
+                                                    message: "Old password is incorrect",
+                                                    preferredStyle: .alert)
+            
+            let okayAction = UIAlertAction(title: "Retry", style: .default, handler: nil)
+            alertController.addAction(okayAction)
+            present(alertController, animated: true, completion: nil)
+        }
     }
     
     private func configSaveChangeButton() {
