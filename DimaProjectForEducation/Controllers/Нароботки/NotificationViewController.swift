@@ -12,6 +12,7 @@ class NotificationViewController: UIViewController {
         commentsNotificationsTableView.delegate = self
         commentsNotificationsTableView.dataSource = self
         commentsNotificationsTableView.register(NotificationCell.self, forCellReuseIdentifier: "NotificationCell")
+        commentsNotificationsTableView.backgroundColor = .darkBlue
         addSubViews()
         setConstraions()
         configNotificationLabel()

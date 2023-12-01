@@ -30,10 +30,17 @@ class HelpFAQViewController: UIViewController {
         super.viewDidLoad()
         addSubViews()
         setConstraints()
+        checkAdmin()
         visualConfigElements()
         configElements()
     }
-    
+    private func checkAdmin() {
+        if LoginUser.shared.user!.isAdmin {
+            self.setTitleNavBar(text: userName)
+        } else {
+            self.setTitleNavBar(text: adminName)
+        }
+    }
     private func configElements() {
         chatTableView.delegate = self
         chatTableView.dataSource = self
@@ -93,7 +100,7 @@ class HelpFAQViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            chatTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16),
+            chatTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 64),
             chatTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             chatTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             chatTableView.bottomAnchor.constraint(equalTo: messageTextField.topAnchor, constant: -8)
