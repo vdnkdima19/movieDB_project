@@ -16,7 +16,7 @@ class ChatsViewController: UIViewController {
             }
         }
         
-        
+        setTitleNavBar(text: "List of appeals")
         addSubViews()
         setConstraints()
         configView()
@@ -29,7 +29,7 @@ class ChatsViewController: UIViewController {
         chatsTableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            chatsTableView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 32),
+            chatsTableView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 64),
             chatsTableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 32),
             chatsTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -32),
             chatsTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -32)
