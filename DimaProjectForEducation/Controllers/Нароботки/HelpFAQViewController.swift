@@ -131,14 +131,17 @@ extension HelpFAQViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let message = messagesArray[indexPath.row]
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "yyyy-MM-dd HH:mm"
+        let date = dateFormater.string(from: message.date)
         if LoginUser.shared.user!.isAdmin && message.isAdmin {
             if let cell = chatTableView.dequeueReusableCell(withIdentifier: "CurrentUserMessageTableViewCell", for: indexPath) as? CurrentUserMessageTableViewCell {
-                cell.configCell(message: message.text)
+                cell.configCell(message: message.text, date: date)
                 return cell
             }
         } else {
             if let cell = chatTableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell", for: indexPath) as? MessageTableViewCell {
-                cell.configCell(message: message.text)
+                cell.configCell(message: message.text, date: date)
                 return cell
             }
         }
