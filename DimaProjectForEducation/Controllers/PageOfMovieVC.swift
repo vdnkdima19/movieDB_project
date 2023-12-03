@@ -69,15 +69,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
         tabBarController?.tabBar.barTintColor = UIColor.darkBlue
         SellectedMoview.moview = filmInfo
         
-        castAndCrewTableView.delegate = self
-        castAndCrewTableView.dataSource = self
-        
-        reviewTableView.delegate = self
-        reviewTableView.dataSource = self
-        
-        
         addSubviews()
-        setConstraints()
         
         castAndCrewTableView.isScrollEnabled = false
         setTextColorAndFontsOfLabels()
@@ -87,28 +79,55 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
         setTextOfTitleOfMovieLabel()
         setBackgrounColorOfAllScrollView()
         setBackgroundColorOfAllTableView()
-        registerCellOfTableViews()
+        
+        configAllStackViews()
+        configTableViews()
+        setDataFromTMDB()
         
         setReleaseAndRatingMovie()
         setGenreOfMovie()
         setDescriptionText()
         setVoteAverageStars()
-        
-        configCastAndCrewStackView()
-        configPhotosStackView()
-        configVideoStackView()
-        configReviewStackView()
-        
+        scrollView.showsVerticalScrollIndicator = false
+        photosScrollView.showsHorizontalScrollIndicator = false
+        videosScrollView.showsHorizontalScrollIndicator = false
+    }
+    
+    private func setDataFromTMDB() {
         fetchMovieFrames(movieId: filmInfo?.id ?? 0)
         fetchCast(movieID: filmInfo?.id ?? 0)
         fetchVideos(movieId: filmInfo?.id ?? 0)
         fetchReviews(movieId: filmInfo?.id ?? 0)
     }
     
+    private func configTableViews() {
+        registerCellOfTableViews()
+        
+        castAndCrewTableView.delegate = self
+        castAndCrewTableView.dataSource = self
+        castAndCrewTableView.separatorStyle = .none
+        
+        reviewTableView.delegate = self
+        reviewTableView.dataSource = self
+        reviewTableView.separatorStyle = .none
+    }
+    
+    private func configAllStackViews() {
+        configCastAndCrewStackView()
+        configPhotosStackView()
+        configVideoStackView()
+        configReviewStackView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.tabBarController?.tabBar.isHidden = false
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setSizeOfScrollView()
         self.navigationController?.navigationBar.isHidden = true
+        setSizeOfScrollView()
+        setConstraints()
     }
     
     public func addSubviews() {
@@ -204,6 +223,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     }
 
     @objc private func viewFullPoster() {
+        navigationController?.tabBarController?.tabBar.isHidden = true
         let fullPoster = FullscreenImageViewController(image: posterImageView.image)
         navigationController?.pushViewController(fullPoster, animated: true)
     }
@@ -427,8 +447,9 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
             reviewTableView.topAnchor.constraint(equalTo: self.reviewStackView.bottomAnchor, constant: 10),
             reviewTableView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
             reviewTableView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor),
-            reviewTableView.heightAnchor.constraint(equalToConstant: 800)
+            reviewTableView.heightAnchor.constraint(equalToConstant: 5000)
         ])
+        
     }
     public func setReleaseAndRatingMovie() {
         let releaseData = filmInfo?.release_date ?? ""
@@ -552,6 +573,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     
     @objc private func viewAllButtonTapped() {
         let castAndCrewVC = CastAndCrewVC(movieID: filmInfo?.id ?? 0)
+        navigationController?.tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(castAndCrewVC, animated: true)
     }
     
@@ -572,6 +594,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     
     @objc private func viewAllPhotoButtonTapped() {
         let movieframesvc = MovieFramesVC(movieID: filmInfo?.id ?? 0)
+        navigationController?.tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(movieframesvc, animated: true)
     }
     
@@ -592,8 +615,8 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     
     @objc private func viewAllVideoButtonTapped() {
         let trailersvc = TrailersVC(movieID: filmInfo?.id ?? 0)
+        navigationController?.tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(trailersvc, animated: true)
-        
     }
     
     public func configReviewStackView() {
@@ -611,13 +634,12 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
         viewAllReviewButton.addTarget(self, action: #selector(viewAllReviewButtonTapped), for: .touchUpInside)
     }
     @objc private func viewAllReviewButtonTapped() {
-
         let reviewvc = ReviewsVC(reviews: reviews, filmName: filmInfo?.title ?? "")
+        navigationController?.tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(reviewvc, animated: true)
     }
     
     public func setSizeOfScrollView() {
-            let reviewTableView = reviewTableView
             let contentHeight = reviewTableView.contentSize.height
             let scrollViewContentHeight = reviewTableView.frame.origin.y + contentHeight
             scrollView.contentSize = CGSize(width: scrollView.frame.width, height: scrollViewContentHeight)
@@ -689,8 +711,6 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
                                 }
                             }
                         }
-                        
-                        
                     }
                     i += 1
                 }
@@ -820,14 +840,12 @@ extension PageOfMovieVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch tableView {
-        case castAndCrewTableView: do {
-            return 100
-        }
-        case reviewTableView: do {
-            return 400
-        }
+        case castAndCrewTableView:
+            100
+        case reviewTableView:
+            UITableView.automaticDimension
         default:
-            return 100
+            100
         }
     }
 }
