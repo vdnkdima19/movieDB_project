@@ -4,6 +4,12 @@ import Alamofire
 class ReviewsVC: UIViewController, ReviewsVCProtocol {
     internal var reviews: [ReviewResult] = []
     var filmName: String = ""
+    var reviewsCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Montserrat-Medium", size: 10)
+        label.textColor = .gray
+        return label
+    }()
     
     private var commentsTable: UITableView = {  // Коментарі до фільму
         let tableView = UITableView()
@@ -19,6 +25,7 @@ class ReviewsVC: UIViewController, ReviewsVCProtocol {
         label.textColor = .white
         return label
     }()
+    
     
     private var totalRatingStars: UIStackView = {  // Загальний рейтинг в зірках
         let stackView = UIStackView()
@@ -49,8 +56,6 @@ class ReviewsVC: UIViewController, ReviewsVCProtocol {
     internal func fetchReviews(movieId: Int) {
         let apiKey = "871ddc96a542d766d2b0fe03fc0ac3d1"
         let urlString = "https://api.themoviedb.org/3/movie/\(movieId)/reviews?api_key=\(apiKey)"
-        
-        
         
         AF.request(urlString).responseDecodable(of: Review.self) { response in
             switch response.result {
@@ -106,15 +111,15 @@ class ReviewsVC: UIViewController, ReviewsVCProtocol {
         
         setupElements()
         setupConstraints()
-        print("filmName: \(filmName)")
+        calculateAverageRating()
      }
-    
-    
     
     internal func setupElements() {
         commentsTable.delegate = self
         commentsTable.dataSource = self
+        commentsTable.separatorStyle = .none
         
+        totalRewiews.text = "\(reviews.count) comment" + (reviews.count == 1 ? "" : "s")
         [commentsTable, totalRating, totalRatingStars, totalRewiews].forEach{
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -174,13 +179,12 @@ extension ReviewsVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         return UITableViewCell()
-        
     }
     
     /// Задає висоту cell
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row < reviews.count {
-            return 320
+            return UITableView.automaticDimension
         } else {
             return 170
         }

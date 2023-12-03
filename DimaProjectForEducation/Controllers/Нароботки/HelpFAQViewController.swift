@@ -9,6 +9,8 @@ class HelpFAQViewController: UIViewController {
     let userName: String
     let adminName: String
     var messagesArray: [ChatMessage]
+    var adminImage = UIImage()
+    var userImage = UIImage()
     
     init(userName: String, adminName: String) {
         self.userName = userName
@@ -19,6 +21,9 @@ class HelpFAQViewController: UIViewController {
         }).filter({ _ in true }).sorted(by: {
             $0.messageId < $1.messageId
         })
+        adminImage = UIImage(data: realm.objects(User.self).where( { $0.username == adminName }).first?.avatarImageData ?? Data()) ?? UIImage()
+        userImage = UIImage(data: realm.objects(User.self).where( { $0.username == userName }).first?.avatarImageData ?? Data()) ?? UIImage()
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,6 +38,7 @@ class HelpFAQViewController: UIViewController {
         checkAdmin()
         visualConfigElements()
         configElements()
+                
     }
     private func checkAdmin() {
         if LoginUser.shared.user!.isAdmin {
@@ -134,14 +140,14 @@ extension HelpFAQViewController: UITableViewDelegate, UITableViewDataSource {
         let dateFormater = DateFormatter()
         dateFormater.dateFormat = "yyyy-MM-dd HH:mm"
         let date = dateFormater.string(from: message.date)
-        if LoginUser.shared.user!.isAdmin && message.isAdmin {
+        if LoginUser.shared.user!.isAdmin && message.isAdmin || !LoginUser.shared.user!.isAdmin && !message.isAdmin {
             if let cell = chatTableView.dequeueReusableCell(withIdentifier: "CurrentUserMessageTableViewCell", for: indexPath) as? CurrentUserMessageTableViewCell {
-                cell.configCell(message: message.text, date: date)
+                cell.configCell(message: message.text, date: date, avatarImage: message.isAdmin ? adminImage : userImage)
                 return cell
             }
         } else {
             if let cell = chatTableView.dequeueReusableCell(withIdentifier: "MessageTableViewCell", for: indexPath) as? MessageTableViewCell {
-                cell.configCell(message: message.text, date: date)
+                cell.configCell(message: message.text, date: date, avatarImage: message.isAdmin ? adminImage : userImage)
                 return cell
             }
         }

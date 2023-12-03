@@ -15,7 +15,6 @@ class ChatsViewController: UIViewController {
                 messagesArray.append((user: user, admin: admin))
             }
         }
-        
         setTitleNavBar(text: "List of appeals")
         addSubViews()
         setConstraints()

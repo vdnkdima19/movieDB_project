@@ -42,7 +42,7 @@ class TrailersVC: UIViewController, TraillersVCProtocol {
     internal func setupElements() {
         tableView.delegate = self
         tableView.dataSource = self
-        
+        tableView.separatorStyle = .none
         setupTableView()
         setupConstraints()
     }

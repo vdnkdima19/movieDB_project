@@ -20,9 +20,7 @@ class MovieVC: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        // genre_id = nil
         fetchMoviesInfo(numOfPage: 1)
-        // fetchMoviesInfoWithGenres(genre_id: 27)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -38,7 +36,6 @@ class MovieVC: UIViewController {
         configChildElements()
         self.view.backgroundColor = .darkBlue
         segControl.backgroundColor = .darkBlue
-        //  self.tabBarController?.delegate = self
         searchTextField.delegate = self
         segControl.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
     }
