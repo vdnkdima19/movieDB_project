@@ -18,7 +18,8 @@ class ActorCell: UITableViewCell {
     /// Налаштовує cell(клітінку)
     public func configCell(cast: Cast) {
         self.backgroundColor = .darkBlue
-        
+        lblName.numberOfLines = 0
+        lblCharacter.numberOfLines = 0
         setupImageView()
         if let profileImagePath = cast.profilePath {
             let profileImageURL = "https://image.tmdb.org/t/p/w500" + profileImagePath
@@ -55,7 +56,7 @@ class ActorCell: UITableViewCell {
     /// Виставляє параметри до lblName
     private func setupLabelName(text: String) {
         lblName.textColor = .white
-        lblName.SetWithLimit(text: text, characterLimit: 13)
+        lblName.text = text
         lblName.font = UIFont(name: "Arial", size: 14) // TODO: Заменить на нормальный шрифт
     }
     
@@ -63,7 +64,8 @@ class ActorCell: UITableViewCell {
     /// Виставляє параметри до lblCharacter
     private func setupLabelCharacter(text: String) {
         lblCharacter.lineBreakMode = .byWordWrapping
-        lblCharacter.SetWithLimit(text: text, characterLimit: 12)
+        lblCharacter.text = text
+        lblCharacter.textAlignment = .right
         lblCharacter.textColor = .gray
         lblCharacter.font = UIFont(name: "Arial", size: 12) // TODO: Заменить на нормальный шрифт
     }
@@ -85,13 +87,14 @@ class ActorCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             lblName.leadingAnchor.constraint(equalTo: actorImageView.trailingAnchor, constant: 20),
-            lblName.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            lblName.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            lblName.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -8)
         ])
         
         NSLayoutConstraint.activate([
-            lblCharacter.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-            lblCharacter.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20),
-            lblCharacter.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 260)
+            lblCharacter.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            lblCharacter.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: 8),
+            lblCharacter.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
         ])
     }
 }

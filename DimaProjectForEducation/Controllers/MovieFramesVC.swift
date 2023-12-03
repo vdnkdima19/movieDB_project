@@ -47,7 +47,7 @@ class MovieFramesVC: UIViewController, MovieFramesVCProtocol {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .darkBlue
-    
+        tableView.separatorStyle = .none
         tableView.register(FrameCell.self, forCellReuseIdentifier: "FrameCellTest")
         self.view.addSubview(tableView)
     }

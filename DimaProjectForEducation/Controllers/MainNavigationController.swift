@@ -27,6 +27,7 @@ class MainNavigationController: UINavigationController {
         newUser.password = "Admin"
         newUser.isAdmin = true
         newUser.isBanned = false
+        newUser.avatarImageData = UIImage(systemName: "person.badge.key.fill")?.jpegData(compressionQuality: 1) ?? Data()
         // Збереження об'єкту User в Realm
         try! realm.write {
             realm.add(newUser)

@@ -150,38 +150,50 @@ class NewReviewCell: UITableViewCell {
     }
     
     @objc private func sendButtonTapped(_ sender: UIButton) {
-        let realm = try! Realm()
-        
-        textFieldDidEndEditing(commentTextField)
-        
-        let newComment = Comments()
-        newComment.text = commentStr
-        newComment.userName = LoginUser.shared.user?.username ?? ""
-        newComment.filmId = SellectedMoview.moview?.id ?? 0
-        newComment.mark = mark
-        newComment.id = realm.objects(Comments.self).count
-        newComment.filmName = self.filmName
-        // Збереження об'єкту User в Realm
-        try! realm.write {
-            realm.add(newComment)
-        }
-        
-        // Show alert
-        let alertController = UIAlertController(title: "Review Submitted",
-                                                message: "Thank you for your review!",
-                                                preferredStyle: .alert)
-        
-        let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.commentTextField.text = ""
-            self?.commentStr = ""
-            self?.defaultConfigStars()
-        }
-        
-        alertController.addAction(okayAction)
-        
-        // Present the alert controller
-        if let viewController = UIApplication.shared.keyWindow?.rootViewController {
-            viewController.present(alertController, animated: true, completion: nil)
+        if !commentTextField.text!.isEmpty {
+            let realm = try! Realm()
+            
+            textFieldDidEndEditing(commentTextField)
+            
+            let newComment = Comments()
+            newComment.text = commentStr
+            newComment.userName = LoginUser.shared.user?.username ?? ""
+            newComment.filmId = SellectedMoview.moview?.id ?? 0
+            newComment.mark = mark
+            newComment.id = realm.objects(Comments.self).count
+            newComment.filmName = self.filmName
+            // Збереження об'єкту User в Realm
+            try! realm.write {
+                realm.add(newComment)
+            }
+            
+            // Show alert
+            let alertController = UIAlertController(title: "Review Submitted",
+                                                    message: "Thank you for your review!",
+                                                    preferredStyle: .alert)
+            
+            let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                self?.commentTextField.text = ""
+                self?.commentStr = ""
+                self?.defaultConfigStars()
+            }
+            
+            alertController.addAction(okayAction)
+            
+            // Present the alert controller
+            if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+                viewController.present(alertController, animated: true, completion: nil)
+            }
+        } else {
+            let alertController = UIAlertController(title: "Review is empty", message: "", preferredStyle: .alert)
+            let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                self?.defaultConfigStars()
+            }
+            alertController.addAction(okayAction)
+            
+            if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+                viewController.present(alertController, animated: true, completion: nil)
+            }
         }
     }
     
