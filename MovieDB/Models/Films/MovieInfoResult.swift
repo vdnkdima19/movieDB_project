@@ -53,7 +53,7 @@ struct MovieInfoResult : Codable {
         vote_count = try values.decodeIfPresent(Int.self, forKey: .vote_count)
     }
     
-    
+
 }
 
 

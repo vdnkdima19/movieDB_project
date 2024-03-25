@@ -8,7 +8,6 @@ struct Review : Codable {
     let total_results : Int?
     
     enum CodingKeys: String, CodingKey {
-        
         case id = "id"
         case page = "page"
         case results = "results"

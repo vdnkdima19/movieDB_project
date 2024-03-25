@@ -21,6 +21,7 @@ class GenreVC: UIViewController{
     var thrillerButton = UIButton()
     var warButton = UIButton()
     var westernButton = UIButton()
+    var dropImage = UIImageView()
     
     var isGenreSelected = false
     
@@ -36,7 +37,7 @@ class GenreVC: UIViewController{
         configGenresButtons()
         configSearchButton()
         addTargetForChildElements()
-        
+        configDrop()
     }
     private func defaultConfigButtons(){
         for genreButton in [
@@ -117,18 +118,24 @@ class GenreVC: UIViewController{
         defaultConfigButtons()
     }
     public func addSubviews() {
-        [genresLabel,actionButton,adventureButton,animationButton,comedyButton,crimeButton,documentaryButton,dramaButton,familyButton,fantasyButton,historyButton,horrorButton,musicButton,mysteryButton,romanceButton,scienceFictionButton,tvMovieButton,thrillerButton,warButton,westernButton,searchButton].forEach {
+        [genresLabel,actionButton,adventureButton,animationButton,comedyButton,crimeButton,documentaryButton,dramaButton,familyButton,fantasyButton,historyButton,horrorButton,musicButton,mysteryButton,romanceButton,scienceFictionButton,tvMovieButton,thrillerButton,warButton,westernButton,searchButton,dropImage].forEach {
             view.addSubview($0)
         }
     }
     public func setConstraints() {
-        [genresLabel,actionButton,adventureButton,animationButton,comedyButton,crimeButton,documentaryButton,dramaButton,familyButton,fantasyButton,historyButton,horrorButton,musicButton,mysteryButton,romanceButton,scienceFictionButton,tvMovieButton,thrillerButton,warButton,westernButton,searchButton].forEach {
+        [genresLabel,actionButton,adventureButton,animationButton,comedyButton,crimeButton,documentaryButton,dramaButton,familyButton,fantasyButton,historyButton,horrorButton,musicButton,mysteryButton,romanceButton,scienceFictionButton,tvMovieButton,thrillerButton,warButton,westernButton,searchButton,dropImage].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         NSLayoutConstraint.activate([
             genresLabel.topAnchor.constraint(equalTo: self.view.topAnchor,constant: -30),
             genresLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,constant: 20),
             genresLabel.heightAnchor.constraint(equalToConstant: 250)
+        ])
+        NSLayoutConstraint.activate([
+            dropImage.topAnchor.constraint(equalTo: self.view.topAnchor,constant: 70),
+            dropImage.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,constant: -20),
+            dropImage.heightAnchor.constraint(equalToConstant: 50),
+            dropImage.widthAnchor.constraint(equalToConstant: 50)
         ])
         NSLayoutConstraint.activate([
             actionButton.topAnchor.constraint(equalTo: self.genresLabel.bottomAnchor,constant: -50),
@@ -248,6 +255,32 @@ class GenreVC: UIViewController{
         warButton.setTitle("War", for: .normal)
         westernButton.setTitle("Western", for: .normal)
     }
+    private func configDrop(){
+        if let image = UIImage(systemName: "clear.fill") {
+            dropImage.image = image.withRenderingMode(.alwaysTemplate)
+            dropImage.tintColor = UIColor.white
+            dropImage.isUserInteractionEnabled = true
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDropButtonTapped))
+            dropImage.addGestureRecognizer(tapGesture)
+        }
+    }
+    @objc private func handleDropButtonTapped() {
+        defaultConfigButtons()
+        genres.removeAll()
+        for genreButton in [
+                actionButton, adventureButton, animationButton, comedyButton, crimeButton,
+                documentaryButton, dramaButton, familyButton, fantasyButton, historyButton,
+                horrorButton, musicButton, mysteryButton, romanceButton, scienceFictionButton,
+                tvMovieButton, thrillerButton, warButton, westernButton
+            ] {
+                buttonIsUnselected(genreButton)
+            }
+        if genres.isEmpty {
+            searchButton.backgroundColor = .backgroundColorLaunchScreen
+            searchButton.setTitleColor(.white, for: .normal)
+        }
+    }
+    
     private func configSearchButton() {
         searchButton.backgroundColor = .systemGray6
         searchButton.layer.cornerRadius = 25

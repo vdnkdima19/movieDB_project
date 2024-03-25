@@ -141,7 +141,6 @@ class ReviewCell: UITableViewCell {
              avatarImage.image = UIImage(systemName: "person.circle.fill")
          }
          authorName.text = reviewResult.author ?? ""
-        print(reviewResult.author)
          setDateInFormat(reviewResult.created_at ?? "")
      }
     

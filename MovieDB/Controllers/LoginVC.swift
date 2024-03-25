@@ -2,7 +2,6 @@ import UIKit
 import RealmSwift
 
 class LoginVC: UIViewController, LoginViewControllerProtocol {
-    
     internal let usernameField = UITextField()
     internal let passwordField = UITextField()
     private var allFields: [UITextField] = []
@@ -23,21 +22,18 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
         }
         return imageView
     }()
-    
     private let usernameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Montserrat-Medium", size: 16)
         label.text = "USER NAME"
         return label
     }()
-    
     private let passwordLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Montserrat-Medium", size: 16)
         label.text = "PASSWORD"
         return label
     }()
-    
     private let showPasswordButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .clear
@@ -65,27 +61,22 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
         button.setTitle("Sign Up", for: .normal)
         return button
     }()
-    
-    
     // MARK: Functionality setup code
     /// Приховує клавіатуру
     @objc internal func hideKeypad() {
         view.endEditing(true)
     }
-    
     /// Перехід на екран регестрації
     @objc internal func goToSignUp(){
         let auto = SignUpVC()
         navigationController?.pushViewController(auto, animated: true)
     }
-    
     /// Зміннює видимість паролю
     @objc internal func changePassVisibility() {
         passwordField.isSecureTextEntry.toggle()
         let buttonImage = passwordField.isSecureTextEntry ? UIImage(named: "Eye") : UIImage(named: "EyeOff")
         showPasswordButton.setImage(buttonImage, for: .normal)
     }
-    
     /// Підклеслює пусті поля червоним
     internal func markEmptyFields() {
         for field in allFields {
@@ -94,10 +85,7 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
             }
         }
     }
-    
     /// Виводить повідомлення що акаунт не найдено
-
-    
     // MARK: Design setup code
     override func viewWillAppear(_ animated: Bool) {
         [passwordField, usernameField].forEach{
@@ -109,15 +97,10 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        testTable.delegate = self
-//        testTable.dataSource = self
         self.view.backgroundColor = .darkBlue
-        
         setupElements()
         addActions()
         setupConstraints()
-
-        
         allFields = [usernameField, passwordField]
         
         func getAppDocumentsDirectory() -> URL? {
@@ -133,7 +116,6 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
             print("Unable to retrieve documents directory.")
         }
     }
-    
     /// Налаштовує елементи для данного ViewController
     internal func setupElements(){
         let paddingInField: CGFloat = 10
@@ -183,45 +165,38 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
             usernameField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             usernameField.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
         NSLayoutConstraint.activate([
             usernameIcon.centerYAnchor.constraint(equalTo: usernameField.centerYAnchor),
             usernameIcon.leadingAnchor.constraint(equalTo: usernameField.leadingAnchor, constant: 15)
         ])
-        
         NSLayoutConstraint.activate([
             passwordLabel.bottomAnchor.constraint(equalTo: passwordField.topAnchor),
             passwordLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             passwordLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             passwordLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
         NSLayoutConstraint.activate([
             passwordIcon.centerYAnchor.constraint(equalTo: passwordField.centerYAnchor),
             passwordIcon.leadingAnchor.constraint(equalTo: passwordField.leadingAnchor, constant: 15)
         ])
-        
         NSLayoutConstraint.activate([
             showPasswordButton.centerYAnchor.constraint(equalTo: passwordField.centerYAnchor),
             showPasswordButton.trailingAnchor.constraint(equalTo: passwordField.trailingAnchor, constant: -10),
             showPasswordButton.widthAnchor.constraint(equalToConstant: 30),
             showPasswordButton.heightAnchor.constraint(equalToConstant: 30)
         ])
-        
         NSLayoutConstraint.activate([
             passwordField.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
             passwordField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             passwordField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             passwordField.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
         NSLayoutConstraint.activate([
             loginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: 30),
             loginButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             loginButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             loginButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-        
         NSLayoutConstraint.activate([
             signUpButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 45),
             signUpButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
@@ -269,7 +244,7 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
         let user = realm.objects(User.self).filter("username = %@", enteredUsername).first
         
         if let user = user, user.password == enteredPassword {
-            if !user.isBanned {
+            if !user.isBanned  {
                 LoginUser.shared.user = user
                 let TabBarController = MovieTabBarController()
                 navigationController?.pushViewController(TabBarController, animated: true)

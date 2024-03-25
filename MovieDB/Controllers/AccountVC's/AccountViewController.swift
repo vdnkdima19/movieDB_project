@@ -122,7 +122,6 @@ class AccountViewController: UIViewController {
     }
     private func configHelpButton() {
         helpFaqButton.setTitle(LoginUser.shared.user!.isAdmin ? "Chats" : "Help/FAQ", for: .normal)
-        //privacyImage.image = UIImage(named: "ImagePrivacy")
         helpFaqButton.backgroundColor = .blueGray
         helpFaqButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
         helpFaqButton.setTitleColor(.white, for: .normal)

@@ -325,6 +325,7 @@ class SignUpVC: UIViewController {
                 newUser.password = password
                 newUser.isAdmin = false
                 newUser.isBanned = false
+                newUser.isRepairBanned = false
                 // Збереження об'єкту User в Realm
                 try! realm.write {
                     realm.add(newUser)

@@ -16,14 +16,38 @@ class ChatsViewController: UIViewController {
                 messagesArray.append((user: user, admin: admin))
             }
         }
+        messagesArray = messagesArray.filter { searchUser in
+            let user = realm.objects(User.self).filter {
+                $0.username == searchUser.user
+            }.first
+            return !user!.isBanned
+        }
         setTitleNavBar(text: "List of appeals")
         addSubViews()
         setConstraints()
         configView()
     }
     override func viewWillAppear(_ animated: Bool) {
-        chatsTableView.reloadData()
+        reloadData()
         chatsTableView.backgroundColor = .darkBlue1
+    }
+    func reloadData() {
+        let realm = try! Realm()
+        messagesArray = []
+        realm.objects(ChatMessage.self).forEach {
+            let user = $0.user
+            let admin = $0.admin
+            if !messagesArray.contains(where: { $0.admin == admin && $0.user == user }) {
+                messagesArray.append((user: user, admin: admin))
+            }
+        }
+        messagesArray = messagesArray.filter { searchUser in
+            let user = realm.objects(User.self).filter {
+                $0.username == searchUser.user
+            }.first
+            return !user!.isBanned
+        }
+        chatsTableView.reloadData()
     }
     private func addSubViews() {
         self.view.addSubview(chatsTableView)
@@ -103,6 +127,7 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
             checkedMessageImageView.heightAnchor.constraint(equalToConstant: 20),
             checkedMessageImageView.widthAnchor.constraint(equalTo: checkedMessageImageView.heightAnchor, multiplier: 1)
         ])
+        
         let userName = messagesArray[indexPath.row].user
                 if let user = realm.objects(User.self).filter("username == %@", userName).first {
                     imageOfAvatar.image = UIImage(data: user.avatarImageData)

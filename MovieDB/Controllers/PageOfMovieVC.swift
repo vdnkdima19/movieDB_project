@@ -5,51 +5,36 @@ import YouTubeiOSPlayerHelper
 
 class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     var scrollView = UIScrollView()
-    
     var backImage = UIImageView()
     var shareButton = UIButton()
     var posterImageView = UIImageView()
-    
     var titleOfMovieLabel = UILabel()
-    
     var releaseAndRatingMovieLabel = UILabel()
     var genreOfMovie = UILabel()
     var ratingAndStarsStackView = UIStackView()
-    
     var descriptionOfMovieLabel = UILabel()
     var descriptionTextOfMovieLabel = UILabel()
-    
     var castAndCrewStackView = UIStackView()
     var castAndCrewTableView = UITableView()
-    
     var photosStackView = UIStackView()
-    
     var photosScrollView = UIScrollView()
     var firstPhoto = UIImageView()
     var secondPhoto = UIImageView()
     var theerdPhoto = UIImageView()
     var fourPhoto = UIImageView()
     var fivePhoto = UIImageView()
-    
     var videosStackView = UIStackView()
     var videosScrollView = UIScrollView()
-    
     var firstVideo = YTPlayerView()
     var secondVideo = YTPlayerView()
     var theerdVideo = YTPlayerView()
     var fourVideo = YTPlayerView()
     var fiveVideo = YTPlayerView()
-    
     var filmInfo: MovieInfoResult?
-    
     var reviewStackView = UIStackView()
     var reviewTableView = UITableView()
-    
     let apiKey = "f5fc273d435f10ca0130435f60524443"
-    
     var reviews:[ReviewResult] = []
-    
-    
     var cast: [Cast] = []
     var backdrops: [Backdrops] = []
     var videos: [VideoResults] = []

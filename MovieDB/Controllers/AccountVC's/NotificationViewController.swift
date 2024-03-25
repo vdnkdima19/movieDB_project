@@ -6,7 +6,6 @@ class NotificationViewController: UIViewController {
     let lineOfView = UIView()
     let commentsNotificationsTableView = UITableView()
     var commentNotificationsArray: [Comments] = []
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         commentsNotificationsTableView.delegate = self
@@ -20,8 +19,8 @@ class NotificationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         addNotifications()
         commentsNotificationsTableView.reloadData()
+       // MovieTabBarController.shared.reloadCountOfNotificationMessage()
     }
-    
     private func addNotifications() {
         let realm = try! Realm()
         let comments = realm.objects(Comments.self).where({
@@ -40,7 +39,6 @@ class NotificationViewController: UIViewController {
             }
         }
     }
-    
     private func addSubViews() {
         [notificationLabel, lineOfView, commentsNotificationsTableView].forEach {
             self.view.addSubview($0)
@@ -74,12 +72,10 @@ class NotificationViewController: UIViewController {
         lineOfView.backgroundColor = .black
     }
 }
-
 extension NotificationViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         commentNotificationsArray.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "NotificationCell", for: indexPath) as? NotificationCell {
             cell.configCell(comment: commentNotificationsArray[indexPath.row])
@@ -94,7 +90,6 @@ extension NotificationViewController: UITableViewDelegate, UITableViewDataSource
             return 40
         }
     }
-    
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
             return UITableView.automaticDimension

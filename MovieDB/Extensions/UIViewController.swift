@@ -10,10 +10,8 @@ extension UIViewController {
             titleLabel.textColor = .white
             titleLabel.sizeToFit()
             self.navigationItem.titleView = titleLabel
-        
         self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationController?.navigationBar.tintColor = .white
-
         self.navigationController?.navigationBar.backgroundColor = .darkBlue
         self.navigationController?.navigationBar.barTintColor = .darkBlue
     }

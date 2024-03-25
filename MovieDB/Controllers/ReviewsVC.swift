@@ -10,7 +10,6 @@ class ReviewsVC: UIViewController, ReviewsVCProtocol {
         label.textColor = .gray
         return label
     }()
-    
     private var commentsTable: UITableView = {  // Коментарі до фільму
         let tableView = UITableView()
         tableView.backgroundColor = .darkBlue
@@ -18,7 +17,6 @@ class ReviewsVC: UIViewController, ReviewsVCProtocol {
         tableView.register(NewReviewCell.self, forCellReuseIdentifier: "NewReviewCell")
         return tableView
     }()
-    
     private var totalRating: UILabel = {  // Загальний рейтинг
         let label = UILabel()
         label.font = UIFont(name: "Arial", size: 38)
@@ -26,10 +24,8 @@ class ReviewsVC: UIViewController, ReviewsVCProtocol {
         return label
     }()
     
-    
     private var totalRatingStars: UIStackView = {  // Загальний рейтинг в зірках
         let stackView = UIStackView()
-        
         return stackView
     }()
     

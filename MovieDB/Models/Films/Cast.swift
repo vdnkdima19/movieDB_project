@@ -46,5 +46,4 @@ struct Cast : Codable {
         creditId = try values.decodeIfPresent(String.self, forKey: .creditId)
         order = try values.decodeIfPresent(Int.self, forKey: .order)
     }
-
 }

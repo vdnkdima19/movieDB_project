@@ -28,7 +28,7 @@ class MovieVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: false)
-        
+        self.navigationController?.navigationBar.isHidden = true
         addSubViews()
         configSearchTextField()
         configFilterButton()
@@ -118,12 +118,11 @@ class MovieVC: UIViewController {
     
     
     @objc private func handleTap() {
-        // Скрываем клавиатуру
         view.endEditing(true)
     }
     
     let imageView: UIImageView = {
-        let searchImage = UIImage(systemName: "magnifyingglass") // Картинка лупи
+        let searchImage = UIImage(systemName: "magnifyingglass")
         
         return UIImageView(image: searchImage)
     } ()
@@ -222,7 +221,6 @@ class MovieVC: UIViewController {
         ])
     }
 }
-
 
 extension MovieVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,UITextFieldDelegate {
     
@@ -354,39 +352,40 @@ extension MovieVC: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
         }
     }
     public func fetchMoviesInfoWithGenres(genre_id: [Int], onClearArray: Bool = false, numOfPage:Int = 1, isComingSoon:Bool = false) {
-        var genres = ""
-        var urlString = "https://api.themoviedb.org/3/discover/movie?api_key=f5fc273d435f10ca0130435f60524443&page=\(numOfPage)&with_genres="
-        genre_id.forEach {
-            genres += ",\($0)"
-        }
-        urlString += genres
-        if isComingSoon {
-            urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key=b8541e6f0d360a89fe91881fcb73d439&page=\(numOfPage)"
-        }
-        AF.request(urlString).responseDecodable(of: MoviesInfo.self) { response in
-            switch response.result {
-            case .success(let movieInfo):
-                if let results = movieInfo.results {
-                    if onClearArray {
-                        self.moviesInfo = []
-                    }
-                    self.moviesInfo += results
-                    var bufer: [MovieInfoResult] = []
-                    self.moviesInfo.forEach {
-                        if $0.genre_ids?.contains(genre_id) ?? false {
-                            bufer.append($0)
+            var genres = ""
+            var urlString = "https://api.themoviedb.org/3/discover/movie?api_key=f5fc273d435f10ca0130435f60524443&page=\(numOfPage)&with_genres="
+            genre_id.forEach {
+                genres += "\($0),"
+            }
+            urlString += genres
+            if isComingSoon {
+                urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key=b8541e6f0d360a89fe91881fcb73d439&page=\(numOfPage)"
+            }
+            AF.request(urlString).responseDecodable(of: MoviesInfo.self) { response in
+                switch response.result {
+                case .success(let movieInfo):
+                    if let results = movieInfo.results {
+                        if onClearArray {
+                            self.moviesInfo = []
                         }
+                        self.moviesInfo += results
+                        var bufer: [MovieInfoResult] = []
+                        self.moviesInfo.forEach {
+                            if $0.genre_ids?.contains(genre_id) ?? false {
+                                bufer.append($0)
+                            }
+                        }
+                        bufer.forEach {
+                            print($0)
+                        }
+                        self.movieCollectionView.reloadData()
                     }
-                    bufer.forEach {
-                        print($0)
-                    }
-                    self.movieCollectionView.reloadData()
+                case .failure(let error):
+                    print("Error: \(error)")
                 }
-            case .failure(let error):
-                print("Error: \(error)")
             }
         }
-    }
+
     private func fetchMoviesInfoComingSoon(numOfPage: Int, onClearArray: Bool = false) {
         let urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key=b8541e6f0d360a89fe91881fcb73d439&page=\(numOfPage)"
         

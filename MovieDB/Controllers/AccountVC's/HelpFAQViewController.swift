@@ -5,13 +5,15 @@ class HelpFAQViewController: UIViewController {
     let sendButton = UIButton()
     let messageTextField = UITextField()
     let chatTableView = UITableView()
-    
     let userName: String
     let adminName: String
     var messagesArray: [ChatMessage]
     var adminImage = UIImage()
     var userImage = UIImage()
+    var lastClickTime: Date?
+    let bannedButton = UIButton()
     
+    var user: User!
     init(userName: String, adminName: String) {
         self.userName = userName
         self.adminName = adminName
@@ -23,30 +25,27 @@ class HelpFAQViewController: UIViewController {
         })
         adminImage = UIImage(data: realm.objects(User.self).where( { $0.username == adminName }).first?.avatarImageData ?? Data()) ?? UIImage()
         userImage = UIImage(data: realm.objects(User.self).where( { $0.username == userName }).first?.avatarImageData ?? Data()) ?? UIImage()
-        
         super.init(nibName: nil, bundle: nil)
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubViews()
         setConstraints()
         checkAdmin()
+        configButtonBanned()
         visualConfigElements()
         configElements()
         chatTableView.backgroundColor = .darkBlue1
         DispatchQueue.main.async {
-                let lastSectionIndex = self.chatTableView.numberOfSections - 1
-                let lastRowIndex = self.chatTableView.numberOfRows(inSection: lastSectionIndex) - 1
-                if lastSectionIndex >= 0 && lastRowIndex >= 0 {
-                    self.chatTableView.scrollToRow(at: IndexPath(row: lastRowIndex, section: lastSectionIndex), at: .bottom, animated: false)
-                }
+            let lastSectionIndex = self.chatTableView.numberOfSections - 1
+            let lastRowIndex = self.chatTableView.numberOfRows(inSection: lastSectionIndex) - 1
+            if lastSectionIndex >= 0 && lastRowIndex >= 0 {
+                self.chatTableView.scrollToRow(at: IndexPath(row: lastRowIndex, section: lastSectionIndex), at: .bottom, animated: false)
             }
-        
+        }
     }
     private func checkAdmin() {
         if LoginUser.shared.user!.isAdmin {
@@ -62,12 +61,103 @@ class HelpFAQViewController: UIViewController {
         chatTableView.register(CurrentUserMessageTableViewCell.self, forCellReuseIdentifier: "CurrentUserMessageTableViewCell")
         chatTableView.separatorStyle = .none
         sendButton.addTarget(self, action: #selector(sendButtonIsPressed), for: .touchUpInside)
+        
+    }
+    
+    @objc private func bannedButtonIsPressed() {
+        let realm = try! Realm()
+        
+        let findUser = realm.objects(User.self).first(where: {
+            $0.username == self.userName
+        })
+        
+        if !(findUser?.isAdmin ?? true) {
+            try! realm.write {
+                findUser?.isBanned = true
+            }
+            let findedUser = realm.objects(User.self).first(where: {
+                $0.username == self.userName
+            })
+            try! realm.write {
+                findedUser?.isBanned = true
+                findedUser?.isRepairBanned = true
+            }
+        }
+        let alertController = UIAlertController(title: "Ban",message: "\(userName) has been banned. Reason: Violation of community guidelines",preferredStyle: .alert)
+            
+            let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }
+            alertController.addAction(okayAction)
+            if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+                viewController.present(alertController, animated: true, completion: nil)
+            }
+            return
     }
     
     @objc private func sendButtonIsPressed() {
-        if !messageTextField.text!.isEmpty {
+        guard let inputText = messageTextField.text, !inputText.isEmpty else {
+                let alertController = UIAlertController(title: "Warning", message: "Your message is empty", preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                }
+                alertController.addAction(okayAction)
+                if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+                    viewController.present(alertController, animated: true, completion: nil)
+                }
+                return
+            }
+
+            let regexPattern = "(?i)\\b([a-z]*stupid[a-z]*|[a-z]*bugger[a-z]*|[a-z]*arse[a-z]*|[a-z]*crap[a-z]*)\\b"
+            let httpRegexPattern = "\\b[A-Za-z]*(http[s]?://\\S+)\\b"
+
+        do {
+                let regex = try NSRegularExpression(pattern: regexPattern, options: [])
+                let httpRegex = try NSRegularExpression(pattern: httpRegexPattern, options: [])
+
+                let httpMatches = httpRegex.matches(in: inputText, options: [], range: NSRange(location: 0, length: inputText.utf16.count))
+                if httpMatches.count > 0 {
+                    let alertController = UIAlertController(title: "Warning", message: "Your review contains HTTP links, which are not allowed", preferredStyle: .alert)
+                    let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                        self?.messageTextField.text = ""
+                    }
+                    alertController.addAction(okayAction)
+                    if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+                        viewController.present(alertController, animated: true, completion: nil)
+                    }
+                    return
+                }
+
+                let matches = regex.matches(in: inputText, options: [], range: NSRange(location: 0, length: inputText.utf16.count))
+                if matches.count > 0 {
+                    let alertController = UIAlertController(title: "Warning", message: "Your message contains prohibited words", preferredStyle: .alert)
+
+                    let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                        self?.messageTextField.text = ""
+                    }
+                    alertController.addAction(okayAction)
+                    if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+                        viewController.present(alertController, animated: true, completion: nil)
+                    }
+                    return
+                }
             let realm = try! Realm()
+            let currentTime = Date()
             
+            if let lastClickTime = self.lastClickTime {
+                let timeDifference = currentTime.timeIntervalSince(lastClickTime)
+                if timeDifference < 5 {   let alertController = UIAlertController(title: "Spam",message: "You've performed this action too quickly. Please wait a moment before trying again",preferredStyle: .alert)
+                    
+                    let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    }
+                    alertController.addAction(okayAction)
+                    if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+                        viewController.present(alertController, animated: true, completion: nil)
+                    }
+                    return
+                }
+            }
+            
+            self.lastClickTime = currentTime
             let newMessage = ChatMessage()
             newMessage.isAdmin = LoginUser.shared.user!.isAdmin
             newMessage.admin = adminName
@@ -84,25 +174,27 @@ class HelpFAQViewController: UIViewController {
                 $0.messageId < $1.messageId
             })
             chatTableView.reloadData()
-            
             messageTextField.text = ""
             DispatchQueue.main.async {
-                    let lastSectionIndex = self.chatTableView.numberOfSections - 1
-                    let lastRowIndex = self.chatTableView.numberOfRows(inSection: lastSectionIndex) - 1
-                    if lastSectionIndex >= 0 && lastRowIndex >= 0 {
-                        self.chatTableView.scrollToRow(at: IndexPath(row: lastRowIndex, section: lastSectionIndex), at: .bottom, animated: true)
-                    }
+                let lastSectionIndex = self.chatTableView.numberOfSections - 1
+                let lastRowIndex = self.chatTableView.numberOfRows(inSection: lastSectionIndex) - 1
+                if lastSectionIndex >= 0 && lastRowIndex >= 0 {
+                    self.chatTableView.scrollToRow(at: IndexPath(row: lastRowIndex, section: lastSectionIndex), at: .bottom, animated: true)
                 }
-        }
+            }
+        } catch {
+                print("Error creating regex: \(error.localizedDescription)")
+            }
     }
     private func addSubViews() {
         self.view.addSubview(chatTableView)
         self.view.addSubview(messageTextField)
         self.view.addSubview(sendButton)
+        self.view.addSubview(bannedButton)
     }
     
     private func setConstraints() {
-        [chatTableView, messageTextField, sendButton].forEach {
+        [chatTableView, messageTextField, sendButton, bannedButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
@@ -112,6 +204,14 @@ class HelpFAQViewController: UIViewController {
             sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             sendButton.heightAnchor.constraint(equalToConstant: 52)
         ])
+        
+        NSLayoutConstraint.activate([
+            bannedButton.bottomAnchor.constraint(equalTo: messageTextField.topAnchor, constant: -8),
+            bannedButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 64),
+            bannedButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -64),
+            bannedButton.heightAnchor.constraint(equalToConstant: 36)
+        ])
+        
         NSLayoutConstraint.activate([
             messageTextField.bottomAnchor.constraint(equalTo: sendButton.topAnchor, constant: -8),
             messageTextField.leadingAnchor.constraint(equalTo: sendButton.leadingAnchor),
@@ -127,32 +227,46 @@ class HelpFAQViewController: UIViewController {
         ])
     }
     
-    private func visualConfigElements() {
-        sendButton.layer.cornerRadius = 5
-        sendButton.backgroundColor = .crimson
-        sendButton.setTitleColor(.white, for: .normal)
-        sendButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
-        sendButton.setTitle("Send", for: .normal)
-        
-        messageTextField.leftViewMode = .always
-        messageTextField.layer.borderColor = UIColor.defaultBorderColor
-        messageTextField.layer.borderWidth = 1.0
-        messageTextField.backgroundColor = .darkBlue
-        messageTextField.textColor = .white
-        messageTextField.layer.cornerRadius = 5
-        
-        let placeholderText = "Enter message"
-        let placeholderColor = UIColor.systemGray
-        let attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.foregroundColor: placeholderColor])
-        messageTextField.attributedPlaceholder = attributedPlaceholder
+    private func configButtonBanned() {
+        if LoginUser.shared.user?.isAdmin ?? false {
+            bannedButton.layer.cornerRadius = 10
+            bannedButton.backgroundColor = .red
+            bannedButton.setTitleColor(.white, for: .normal)
+            bannedButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
+            bannedButton.setTitle("Ban", for: .normal)
+        }
+        bannedButton.addTarget(self, action: #selector(bannedButtonIsPressed), for: .touchUpInside)
     }
+    
+    private func visualConfigElements() {
+            sendButton.layer.cornerRadius = 5
+            sendButton.backgroundColor = .crimson
+            sendButton.setTitleColor(.white, for: .normal)
+            sendButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
+            sendButton.setTitle("Send", for: .normal)
+        
+            messageTextField.leftViewMode = .always
+            messageTextField.layer.borderColor = UIColor.defaultBorderColor
+            messageTextField.layer.borderWidth = 1.0
+            messageTextField.backgroundColor = .darkBlue
+            messageTextField.textColor = .white
+            messageTextField.layer.cornerRadius = 5
+            
+            let placeholderText = "Enter message"
+            let placeholderColor = UIColor.systemGray
+            let attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.foregroundColor: placeholderColor])
+            messageTextField.attributedPlaceholder = attributedPlaceholder
+        }
+        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+            textField.resignFirstResponder()
+            return true
+        }
 }
 
 extension HelpFAQViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         messagesArray.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let message = messagesArray[indexPath.row]
         let dateFormater = DateFormatter()
@@ -172,10 +286,7 @@ extension HelpFAQViewController: UITableViewDelegate, UITableViewDataSource {
         
         return UITableViewCell()
     }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
             return UITableView.automaticDimension

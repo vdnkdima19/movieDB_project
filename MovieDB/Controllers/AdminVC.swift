@@ -21,9 +21,7 @@ class AdminVC: UIViewController {
             commentsArr.append($0)
         }
     }
-    
-    
-    
+
     private func addSubViews() {
         self.view.addSubview(adminLabel)
         self.view.addSubview(commentsTableView)
@@ -44,13 +42,13 @@ class AdminVC: UIViewController {
         
         NSLayoutConstraint.activate([
             adminLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            adminLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90)
+            adminLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 80)
         ])
         NSLayoutConstraint.activate([
-            commentsTableView.topAnchor.constraint(equalTo: adminLabel.bottomAnchor, constant: 30),
-            commentsTableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
-            commentsTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
-            commentsTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30)
+            commentsTableView.topAnchor.constraint(equalTo: adminLabel.bottomAnchor, constant: 20),
+            commentsTableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            commentsTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            commentsTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -20)
         ])
     }
 }
@@ -79,6 +77,6 @@ extension AdminVC: UITableViewDelegate, UITableViewDataSource {
         return UITableViewCell()
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        168
+        254
     }
 }

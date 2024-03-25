@@ -141,8 +141,7 @@ class ChangePasswordViewController: UIViewController {
             if newPassword == reTypePassword {
                 if oldPassword == newPassword {
                     let alertController = UIAlertController(title: "Warning",
-                                                            message: "Old password and new password are the same",
-                                                            preferredStyle: .alert)
+                    message: "Old password and new password are the same", preferredStyle: .alert)
                     
                     let okayAction = UIAlertAction(title: "OK", style: .default, handler: nil)
                     alertController.addAction(okayAction)
@@ -152,8 +151,7 @@ class ChangePasswordViewController: UIViewController {
                         currentUser.password = newPassword
                     }
                     let alertController = UIAlertController(title: "Successfully",
-                                                            message: "Password changed successfully",
-                                                            preferredStyle: .alert)
+                    message: "Password changed successfully", preferredStyle: .alert)
                     
                     let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
                         self?.oldPasswordField.text = ""

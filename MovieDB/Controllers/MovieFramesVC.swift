@@ -4,7 +4,7 @@ import Alamofire
 class MovieFramesVC: UIViewController, MovieFramesVCProtocol {
     private var tableView: UITableView!         // Таблиця
     internal var movieFrames: [Backdrops] = []
-    private let rowHeigth: CGFloat = 240        // Висота блоків в табліці
+    private let rowHeigth: CGFloat = 240        // Висота блоків в таблиці
     
     /// При ініціалізації передається id фільму для завантаження данних
     init(movieID: Int) {
