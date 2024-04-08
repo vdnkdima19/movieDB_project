@@ -221,14 +221,36 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
         present(alertController, animated: true, completion: nil)
     }
     
-    internal func userIsBannedAlert() {
-        let alertController = UIAlertController(title: "Your account is banned", message: "", preferredStyle: .alert)
-        
-        alertController.addAction(UIAlertAction(title: "Ok", style: .default))
-        
-        present(alertController, animated: true, completion: nil)
+    internal func userIsBannedAlert(userName: String, isRepairBanned: Bool, bannedDescription: String) {
+        if isRepairBanned {
+            let refreshAlert = UIAlertController(title: "Message", message: "Your account has banned. \nDescription: \(bannedDescription)", preferredStyle: UIAlertController.Style.alert)
+            
+            refreshAlert.addAction(UIAlertAction(title: "Chat with Admin", style: .default, handler: { (action: UIAlertAction!) in
+                
+                let helpVC = HelpFAQViewController(userName: userName, adminName: "Admin")
+                self.present(helpVC, animated: true, completion: nil)
+                self.navigationController?.navigationBar.isHidden = true
+                self.usernameField.text = ""
+                self.passwordField.text = ""
+                self.usernameIcon.isHidden = false
+                self.passwordIcon.isHidden = false
+                self.view.endEditing(true)
+                self.usernameField.resignFirstResponder()
+                self.passwordField.resignFirstResponder()
+            }))
+            
+            refreshAlert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: { (action: UIAlertAction!) in
+            }))
+            present(refreshAlert, animated: true, completion: nil)
+        } else {
+            let refreshAlert = UIAlertController(title: "Message", message: "Your account is permanently locked and cannot be recovered.", preferredStyle: UIAlertController.Style.alert)
+            refreshAlert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: { (action: UIAlertAction!) in
+                self.usernameField.text = ""
+                self.passwordField.text = ""
+            }))
+            present(refreshAlert, animated: true, completion: nil)
+        }
     }
-    
     /// Робить вхід акаунт за данними введеними в поля usernameField, enteredPassword
     @objc internal func loginUser() {
         
@@ -239,25 +261,26 @@ class LoginVC: UIViewController, LoginViewControllerProtocol {
         }
 
         let realm = try! Realm()
-
         // Перевірка, чи існує користувач з таким логіном
         let user = realm.objects(User.self).filter("username = %@", enteredUsername).first
         
         if let user = user, user.password == enteredPassword {
+            LoginUser.shared.user = user
             if !user.isBanned  {
-                LoginUser.shared.user = user
-                let TabBarController = MovieTabBarController()
+                if let tabBarIndex = navigationController?.viewControllers.firstIndex(where: {$0 is MovieTabBarController} ) {
+                    navigationController?.viewControllers.remove(at: tabBarIndex)
+                }
+                let TabBarController = MovieTabBarController.shared
+                TabBarController.configTabBar()
                 navigationController?.pushViewController(TabBarController, animated: true)
                 
             } else {
-                userIsBannedAlert()
+                userIsBannedAlert(userName: user.username, isRepairBanned: user.isRepairBanned, bannedDescription: user.bannedDescription)
             }
         } else {
             showMissingAlert()
         }
-        
     }
-  
 }
 extension LoginVC: UITextFieldDelegate {
     /// Приховує іконку поля коли користувач починає взаємодію з полем

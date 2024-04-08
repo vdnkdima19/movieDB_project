@@ -137,7 +137,7 @@ class NewReviewCell: UITableViewCell {
     
     private func setTargetsForStars() {
         [firstStarTap, secondStarTap, thirdStarTap, fourghtStarTap, fivethStarTap].forEach {
-            $0.addTarget(self, action: #selector(starIsTapped))
+            $0.addTarget(self, action: #selector(starIsPressed))
         }
     }
     
@@ -240,7 +240,7 @@ class NewReviewCell: UITableViewCell {
             }
     }
     
-    @objc private func starIsTapped(_ sender: UITapGestureRecognizer) {
+    @objc private func starIsPressed(_ sender: UITapGestureRecognizer) {
         switch sender {
         case firstStarTap: do {
             firstStarImageView.image = filllStarImage

@@ -7,6 +7,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     var scrollView = UIScrollView()
     var backImage = UIImageView()
     var shareButton = UIButton()
+    var addListButton = UIButton()
     var posterImageView = UIImageView()
     var titleOfMovieLabel = UILabel()
     var releaseAndRatingMovieLabel = UILabel()
@@ -38,12 +39,14 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     var cast: [Cast] = []
     var backdrops: [Backdrops] = []
     var videos: [VideoResults] = []
+    var allMoviews: [MovieInfoResult] = []
+    var isSellected: Bool = false
     
-    init(filmInfo: MovieInfoResult) {
+    init(filmInfo: MovieInfoResult, allMoviews: [MovieInfoResult]) {
         super.init(nibName: nil, bundle: nil)
+        self.allMoviews = allMoviews
         self.filmInfo = filmInfo
         self.photos = [firstPhoto, secondPhoto, theerdPhoto, fourPhoto, fivePhoto]
-        
     }
     
     required init?(coder: NSCoder) {
@@ -55,11 +58,17 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
         SellectedMoview.moview = filmInfo
         
         addSubviews()
-        
+        let realm = try! Realm()
+        if let selectedFilm = realm.objects(ListOfRecomendationMovies.self).filter("username = %@ AND filmId = %@", LoginUser.shared.user?.username ?? "", filmInfo?.id ?? 0).first {
+            self.isSellected = true
+        } else {
+            self.isSellected = false
+            }
         castAndCrewTableView.isScrollEnabled = false
         setTextColorAndFontsOfLabels()
         setBackImage()
         setShareButton()
+        setAddListButton()
         setPoster()
         setTextOfTitleOfMovieLabel()
         setBackgrounColorOfAllScrollView()
@@ -76,6 +85,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
         scrollView.showsVerticalScrollIndicator = false
         photosScrollView.showsHorizontalScrollIndicator = false
         videosScrollView.showsHorizontalScrollIndicator = false
+        addListButton.tintColor = isSellected ? .white : .yellow
     }
     
     private func setDataFromTMDB() {
@@ -105,6 +115,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        addListButton.tintColor = isSellected ? .yellow : .white
         navigationController?.tabBarController?.tabBar.isHidden = false
     }
     
@@ -118,7 +129,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
     public func addSubviews() {
         self.view.addSubview(scrollView)
         
-        [titleOfMovieLabel, backImage, posterImageView, releaseAndRatingMovieLabel, genreOfMovie, ratingAndStarsStackView, descriptionOfMovieLabel,descriptionTextOfMovieLabel,castAndCrewStackView,castAndCrewTableView,photosStackView, photosScrollView,videosStackView,videosScrollView,reviewStackView, reviewTableView,shareButton].forEach {
+        [titleOfMovieLabel, backImage, posterImageView, releaseAndRatingMovieLabel, genreOfMovie, ratingAndStarsStackView, descriptionOfMovieLabel,descriptionTextOfMovieLabel,castAndCrewStackView,castAndCrewTableView,photosStackView, photosScrollView,videosStackView,videosScrollView,reviewStackView, reviewTableView,shareButton,addListButton].forEach {
             scrollView.addSubview($0)
         }
         
@@ -173,6 +184,34 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
         }
         shareButton.addTarget(self, action: #selector(shareMovie), for: .touchUpInside)
 
+    }
+    public func setAddListButton() {
+        if let image = UIImage(systemName: "bookmark.fill") {
+            addListButton.setImage(image, for: .normal)
+            addListButton.tintColor = UIColor.white
+        }
+        addListButton.addTarget(self, action: #selector(addListButtonSelected), for: .touchUpInside)
+    }
+    @objc public func addListButtonSelected() {
+        let realm = try! Realm()
+        
+        if let existingFilm = realm.objects(ListOfRecomendationMovies.self).filter("username = %@ AND filmId = %@", LoginUser.shared.user?.username ?? "", filmInfo?.id ?? 0).first {
+            try! realm.write {
+                realm.delete(existingFilm)
+            }
+            self.addListButton.tintColor = UIColor.white
+        } else {
+                let newFilmToList = ListOfRecomendationMovies()
+                newFilmToList.username = LoginUser.shared.user?.username ?? ""
+                newFilmToList.filmId = filmInfo?.id ?? 0
+                newFilmToList.filmStatus = 1
+                try! realm.write {
+                    realm.add(newFilmToList)
+                }
+            self.addListButton.tintColor = UIColor.yellow
+            }
+        
+        FavoriteMovies.shared.reloadArr(allMovies: allMoviews, username: LoginUser.shared.user?.username ?? "")
     }
     
     @objc public func shareMovie() {
@@ -237,7 +276,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
            titleOfMovieLabel.sizeToFit()
     }
     public func setConstraints() {
-        [titleOfMovieLabel, backImage,posterImageView,releaseAndRatingMovieLabel, genreOfMovie,ratingAndStarsStackView,descriptionOfMovieLabel,descriptionTextOfMovieLabel,castAndCrewStackView,castAndCrewTableView, photosStackView, photosScrollView,firstPhoto,secondPhoto,theerdPhoto,fourPhoto,fivePhoto, videosStackView, videosScrollView, firstVideo, secondVideo, theerdVideo, fourVideo, fiveVideo,reviewStackView, reviewTableView, shareButton].forEach {
+        [titleOfMovieLabel, backImage,posterImageView,releaseAndRatingMovieLabel, genreOfMovie,ratingAndStarsStackView,descriptionOfMovieLabel,descriptionTextOfMovieLabel,castAndCrewStackView,castAndCrewTableView, photosStackView, photosScrollView,firstPhoto,secondPhoto,theerdPhoto,fourPhoto,fivePhoto, videosStackView, videosScrollView, firstVideo, secondVideo, theerdVideo, fourVideo, fiveVideo,reviewStackView, reviewTableView, shareButton, addListButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         scrollView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
@@ -254,6 +293,13 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
             backImage.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor),
             backImage.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
             backImage.heightAnchor.constraint(equalToConstant: 250)
+        ])
+        
+        NSLayoutConstraint.activate([
+            addListButton.topAnchor.constraint(equalTo: self.ratingAndStarsStackView.topAnchor),
+            addListButton.leadingAnchor.constraint(equalTo: self.ratingAndStarsStackView.trailingAnchor, constant: 20),
+            addListButton.widthAnchor.constraint(equalToConstant: 20),
+            addListButton.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         NSLayoutConstraint.activate([
@@ -274,8 +320,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
             titleOfMovieLabel.topAnchor.constraint(equalTo: self.posterImageView.bottomAnchor, constant: 32),
             titleOfMovieLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             titleOfMovieLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor,constant: 16),
-            titleOfMovieLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,constant: -16),
-         //   titleOfMovieLabel.heightAnchor.constraint(equalToConstant: 25)
+            titleOfMovieLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor,constant: -16)
         ])
         
         NSLayoutConstraint.activate ([
@@ -630,7 +675,7 @@ class PageOfMovieVC: UIViewController, PageOfMovieVCProtocol {
             scrollView.contentSize = CGSize(width: scrollView.frame.width, height: scrollViewContentHeight)
     }
     
-    let photoWidth: CGFloat = 300 // Змініть ширину кожної фотографії відповідно до своїх потреб
+    let photoWidth: CGFloat = 300 
     var photos: [UIImageView] = []
     public func setSizeOfPhotosScroll(photosCount: Int) {
        var count = photosCount

@@ -19,7 +19,7 @@ class NotificationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         addNotifications()
         commentsNotificationsTableView.reloadData()
-       // MovieTabBarController.shared.reloadCountOfNotificationMessage()
+        MovieTabBarController.shared.reloadCountOfNotificationMessage()
     }
     private func addNotifications() {
         let realm = try! Realm()

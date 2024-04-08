@@ -120,7 +120,7 @@ class ChangePasswordViewController: UIViewController {
             $0.layer.cornerRadius = 5
         }
     }
-    @objc private func saveChangeButtonTapped(_ sender: UIButton) {
+    @objc private func saveChangeButtonIsPressed(_ sender: UIButton) {
         guard
             let oldPassword = oldPasswordField.text,
             let newPassword = newPasswordField.text,
@@ -189,7 +189,7 @@ class ChangePasswordViewController: UIViewController {
         saveChangeButton.setTitleColor(.white, for: .normal)
         saveChangeButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
         
-        saveChangeButton.addTarget(self, action: #selector(saveChangeButtonTapped), for: .touchUpInside)
+        saveChangeButton.addTarget(self, action: #selector(saveChangeButtonIsPressed), for: .touchUpInside)
     }
 }
 extension ChangePasswordViewController: UITextFieldDelegate {

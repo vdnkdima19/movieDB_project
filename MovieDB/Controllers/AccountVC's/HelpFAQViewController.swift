@@ -12,6 +12,8 @@ class HelpFAQViewController: UIViewController {
     var userImage = UIImage()
     var lastClickTime: Date?
     let bannedButton = UIButton()
+    let unBanButton = UIButton()
+    let permanentBanButton = UIButton()
     
     var user: User!
     init(userName: String, adminName: String) {
@@ -34,11 +36,12 @@ class HelpFAQViewController: UIViewController {
         super.viewDidLoad()
         addSubViews()
         setConstraints()
-        checkAdmin()
+        setAdminOrUserTitleForNavBar()
         configButtonBanned()
         visualConfigElements()
         configElements()
-        chatTableView.backgroundColor = .darkBlue1
+        self.view.backgroundColor = .darkBlue
+        chatTableView.backgroundColor = .darkBlue
         DispatchQueue.main.async {
             let lastSectionIndex = self.chatTableView.numberOfSections - 1
             let lastRowIndex = self.chatTableView.numberOfRows(inSection: lastSectionIndex) - 1
@@ -47,7 +50,7 @@ class HelpFAQViewController: UIViewController {
             }
         }
     }
-    private func checkAdmin() {
+    private func setAdminOrUserTitleForNavBar() {
         if LoginUser.shared.user!.isAdmin {
             self.setTitleNavBar(text: userName)
         } else {
@@ -66,24 +69,109 @@ class HelpFAQViewController: UIViewController {
     
     @objc private func bannedButtonIsPressed() {
         let realm = try! Realm()
+        let refreshAlert = UIAlertController(title: "List of type Ban", message: "Select type of ban", preferredStyle: UIAlertController.Style.alert)
         
-        let findUser = realm.objects(User.self).first(where: {
-            $0.username == self.userName
-        })
-        
-        if !(findUser?.isAdmin ?? true) {
-            try! realm.write {
-                findUser?.isBanned = true
-            }
-            let findedUser = realm.objects(User.self).first(where: {
+        let firstAction = UIAlertAction(title: "violation of the rules of use", style: .default) { _ in
+            let findUser = realm.objects(User.self).first(where: {
                 $0.username == self.userName
             })
-            try! realm.write {
-                findedUser?.isBanned = true
-                findedUser?.isRepairBanned = true
+            
+            if !(findUser?.isAdmin ?? true) {
+                try! realm.write {
+                    findUser?.isBanned = true
+                }
+                let findedUser = realm.objects(User.self).first(where: {
+                    $0.username == self.userName
+                })
+                try! realm.write {
+                    findedUser?.isBanned = true
+                    findedUser?.isRepairBanned = true
+                    findUser?.bannedDescription = "violation of the rules of use"
+                }
             }
+            self.descriptionAlert()
         }
-        let alertController = UIAlertController(title: "Ban",message: "\(userName) has been banned. Reason: Violation of community guidelines",preferredStyle: .alert)
+        let secondAction = UIAlertAction(title: "content violation", style: .default) { _ in
+                let findUser = realm.objects(User.self).first(where: {
+                    $0.username == self.userName
+                })
+                
+                if !(findUser?.isAdmin ?? true) {
+                    try! realm.write {
+                        findUser?.isBanned = true
+                    }
+                    let findedUser = realm.objects(User.self).first(where: {
+                        $0.username == self.userName
+                    })
+                    try! realm.write {
+                        findedUser?.isBanned = true
+                        findedUser?.isRepairBanned = true
+                        findUser?.bannedDescription = "content violation"
+                    }
+                }
+            self.descriptionAlert()
+        }
+        
+        let thirdAction = UIAlertAction(title: "unacceptable behavior", style: .default) { _ in
+            let findUser = realm.objects(User.self).first(where: {
+                $0.username == self.userName
+            })
+            
+            if !(findUser?.isAdmin ?? true) {
+                try! realm.write {
+                    findUser?.isBanned = true
+                }
+                let findedUser = realm.objects(User.self).first(where: {
+                    $0.username == self.userName
+                })
+                try! realm.write {
+                    findedUser?.isBanned = true
+                    findedUser?.isRepairBanned = true
+                    findUser?.bannedDescription = "unacceptable behavior"
+                }
+            }
+            self.descriptionAlert()
+        }
+        
+        let fouthAction = UIAlertAction(title: "security breach", style: .default) { _ in
+            let findUser = realm.objects(User.self).first(where: {
+                $0.username == self.userName
+            })
+            
+            if !(findUser?.isAdmin ?? true) {
+                try! realm.write {
+                    findUser?.isBanned = true
+                }
+                let findedUser = realm.objects(User.self).first(where: {
+                    $0.username == self.userName
+                })
+                try! realm.write {
+                    findedUser?.isBanned = true
+                    findedUser?.isRepairBanned = true
+                    findUser?.bannedDescription = "security breach"
+                }
+            }
+            self.descriptionAlert()
+        }
+        
+        let closeAlert = UIAlertAction(title: "Close", style: .default) { _ in
+            }
+        firstAction.setValue(UIColor.systemGreen, forKey: "titleTextColor")
+        secondAction.setValue(UIColor.yellow, forKey: "titleTextColor")
+        thirdAction.setValue(UIColor.systemOrange, forKey: "titleTextColor")
+        fouthAction.setValue(UIColor.systemRed, forKey: "titleTextColor")
+        closeAlert.setValue(UIColor.black, forKey: "titleTextColor")
+
+        refreshAlert.addAction(firstAction)
+        refreshAlert.addAction(secondAction)
+        refreshAlert.addAction(thirdAction)
+        refreshAlert.addAction(fouthAction)
+        refreshAlert.addAction(closeAlert)
+        present(refreshAlert, animated: true, completion: nil)
+    }
+    
+    private func descriptionAlert() {
+        let alertController = UIAlertController(title: "Ban",message: "\(userName) has been banned",preferredStyle: .alert)
             
             let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
                 self?.navigationController?.popViewController(animated: true)
@@ -93,6 +181,69 @@ class HelpFAQViewController: UIViewController {
                 viewController.present(alertController, animated: true, completion: nil)
             }
             return
+    }
+    @objc private func unBannedButtonIsPressed() {
+        let realm = try! Realm()
+        
+        let findUser = realm.objects(User.self).first(where: {
+            $0.username == self.userName
+        })
+        
+        if !(findUser?.isAdmin ?? true) {
+            try! realm.write {
+                findUser?.isBanned = false
+            }
+            let findedUser = realm.objects(User.self).first(where: {
+                $0.username == self.userName
+            })
+            try! realm.write {
+                findedUser?.isBanned = false
+                findedUser?.isRepairBanned = false
+                findedUser?.bannedDescription = ""
+            }
+        }
+        
+        let alertController = UIAlertController(title: "Unban", message: "\(userName) has been unbanned", preferredStyle: .alert)
+        
+        let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alertController.addAction(okayAction)
+        
+        if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+            viewController.present(alertController, animated: true, completion: nil)
+        }
+    }
+    @objc private func permanentBannedButtonIsPressed() {
+        let realm = try! Realm()
+        
+        let findUser = realm.objects(User.self).first(where: {
+            $0.username == self.userName
+        })
+        
+        if !(findUser?.isAdmin ?? true) {
+            try! realm.write {
+                findUser?.isRepairBanned = false
+            }
+            let findedUser = realm.objects(User.self).first(where: {
+                $0.username == self.userName
+            })
+            try! realm.write {
+                findedUser?.isBanned = true
+                findedUser?.isRepairBanned = false
+            }
+        }
+        
+        let alertController = UIAlertController(title: "Permanent Ban", message: "\(userName) has been permanently banned", preferredStyle: .alert)
+        
+        let okayAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alertController.addAction(okayAction)
+        
+        if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+            viewController.present(alertController, animated: true, completion: nil)
+        }
     }
     
     @objc private func sendButtonIsPressed() {
@@ -191,10 +342,12 @@ class HelpFAQViewController: UIViewController {
         self.view.addSubview(messageTextField)
         self.view.addSubview(sendButton)
         self.view.addSubview(bannedButton)
+        self.view.addSubview(unBanButton)
+        self.view.addSubview(permanentBanButton)
     }
     
     private func setConstraints() {
-        [chatTableView, messageTextField, sendButton, bannedButton].forEach {
+        [chatTableView, messageTextField, sendButton, bannedButton, unBanButton, permanentBanButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
@@ -210,6 +363,18 @@ class HelpFAQViewController: UIViewController {
             bannedButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 64),
             bannedButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -64),
             bannedButton.heightAnchor.constraint(equalToConstant: 36)
+        ])
+        NSLayoutConstraint.activate([
+            unBanButton.bottomAnchor.constraint(equalTo: messageTextField.topAnchor, constant: -8),
+            unBanButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            unBanButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -8),
+            unBanButton.heightAnchor.constraint(equalToConstant: 36)
+        ])
+        NSLayoutConstraint.activate([
+            permanentBanButton.bottomAnchor.constraint(equalTo: messageTextField.topAnchor, constant: -8),
+            permanentBanButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            permanentBanButton.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 8),
+            permanentBanButton.heightAnchor.constraint(equalToConstant: 36)
         ])
         
         NSLayoutConstraint.activate([
@@ -229,15 +394,32 @@ class HelpFAQViewController: UIViewController {
     
     private func configButtonBanned() {
         if LoginUser.shared.user?.isAdmin ?? false {
-            bannedButton.layer.cornerRadius = 10
-            bannedButton.backgroundColor = .red
-            bannedButton.setTitleColor(.white, for: .normal)
-            bannedButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
-            bannedButton.setTitle("Ban", for: .normal)
+            let realm = try! Realm()
+            let findUser = realm.objects(User.self).first(where: { $0.username == self.userName })
+            if findUser?.isRepairBanned ?? false {
+                unBanButton.layer.cornerRadius = 10
+                unBanButton.backgroundColor = .green
+                unBanButton.setTitleColor(.white, for: .normal)
+                unBanButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
+                unBanButton.setTitle("Unban", for: .normal)
+                unBanButton.addTarget(self, action: #selector(unBannedButtonIsPressed), for: .touchUpInside)
+                permanentBanButton.layer.cornerRadius = 10
+                permanentBanButton.backgroundColor = .red
+                permanentBanButton.setTitleColor(.white, for: .normal)
+                permanentBanButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
+                permanentBanButton.setTitle("Full ban", for: .normal)
+                permanentBanButton.addTarget(self, action: #selector(permanentBannedButtonIsPressed), for: .touchUpInside)
+            } else {
+                bannedButton.layer.cornerRadius = 10
+                bannedButton.backgroundColor = .red
+                bannedButton.setTitleColor(.white, for: .normal)
+                bannedButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
+                bannedButton.setTitle("Ban", for: .normal)
+                bannedButton.addTarget(self, action: #selector(bannedButtonIsPressed), for: .touchUpInside)
+            }
         }
-        bannedButton.addTarget(self, action: #selector(bannedButtonIsPressed), for: .touchUpInside)
     }
-    
+
     private func visualConfigElements() {
             sendButton.layer.cornerRadius = 5
             sendButton.backgroundColor = .crimson

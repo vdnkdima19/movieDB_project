@@ -20,8 +20,9 @@ class ChatsViewController: UIViewController {
             let user = realm.objects(User.self).filter {
                 $0.username == searchUser.user
             }.first
-            return !user!.isBanned
+            return !(user?.isBanned ?? true) || (user?.isRepairBanned ?? false)
         }
+        
         setTitleNavBar(text: "List of appeals")
         addSubViews()
         setConstraints()
@@ -29,7 +30,7 @@ class ChatsViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         reloadData()
-        chatsTableView.backgroundColor = .darkBlue1
+        chatsTableView.backgroundColor = .darkBlue
     }
     func reloadData() {
         let realm = try! Realm()
@@ -41,11 +42,12 @@ class ChatsViewController: UIViewController {
                 messagesArray.append((user: user, admin: admin))
             }
         }
+        
         messagesArray = messagesArray.filter { searchUser in
             let user = realm.objects(User.self).filter {
                 $0.username == searchUser.user
             }.first
-            return !user!.isBanned
+            return !(user?.isBanned ?? true) || (user?.isRepairBanned ?? false)
         }
         chatsTableView.reloadData()
     }
@@ -81,12 +83,14 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
         let lineOfView = UIView()
         let dataOfLastMessage = UILabel()
         let checkedMessageImageView = UIImageView()
+        let statusOfAccount = UILabel()
         cell.addSubview(userNameLabel)
         cell.addSubview(imageOfAvatar)
         cell.addSubview(messageText)
         cell.addSubview(lineOfView)
         cell.addSubview(dataOfLastMessage)
         cell.addSubview(checkedMessageImageView)
+        cell.addSubview(statusOfAccount)
         cell.backgroundColor = .darkBlue1
         userNameLabel.translatesAutoresizingMaskIntoConstraints = false
         imageOfAvatar.translatesAutoresizingMaskIntoConstraints = false
@@ -94,6 +98,7 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
         dataOfLastMessage.translatesAutoresizingMaskIntoConstraints = false
         lineOfView.translatesAutoresizingMaskIntoConstraints = false
         checkedMessageImageView.translatesAutoresizingMaskIntoConstraints = false
+        statusOfAccount.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageOfAvatar.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10),
             imageOfAvatar.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 6),
@@ -102,8 +107,11 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
         ])
         NSLayoutConstraint.activate([
             userNameLabel.leadingAnchor.constraint(equalTo: imageOfAvatar.trailingAnchor, constant: 16),
-            userNameLabel.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -6),
             userNameLabel.topAnchor.constraint(equalTo: imageOfAvatar.topAnchor)
+        ])
+        NSLayoutConstraint.activate([
+            statusOfAccount.leadingAnchor.constraint(equalTo: userNameLabel.trailingAnchor, constant: 16),
+            statusOfAccount.topAnchor.constraint(equalTo: imageOfAvatar.topAnchor)
         ])
         NSLayoutConstraint.activate([
             messageText.leadingAnchor.constraint(equalTo: imageOfAvatar.trailingAnchor, constant: 16),
@@ -127,10 +135,17 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
             checkedMessageImageView.heightAnchor.constraint(equalToConstant: 20),
             checkedMessageImageView.widthAnchor.constraint(equalTo: checkedMessageImageView.heightAnchor, multiplier: 1)
         ])
-        
+        if LoginUser.shared.user!.isRepairBanned {
+            statusOfAccount.text = "(blocked)"
+            statusOfAccount.textColor = .red
+        }
         let userName = messagesArray[indexPath.row].user
                 if let user = realm.objects(User.self).filter("username == %@", userName).first {
                     imageOfAvatar.image = UIImage(data: user.avatarImageData)
+                    if user.isRepairBanned == true {
+                            statusOfAccount.text = "(blocked)"
+                            statusOfAccount.textColor = .red
+                        }
                 } else {
                     imageOfAvatar.image = UIImage(systemName: "person.circle.fill")
                 }
@@ -182,5 +197,4 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
         }
         navigationController?.pushViewController(HelpFAQViewController(userName: messagesArray[indexPath.row].user, adminName: LoginUser.shared.user!.username), animated: true)
     }
-    
 }

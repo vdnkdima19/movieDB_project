@@ -11,6 +11,8 @@ class AccountViewController: UIViewController {
     let accountInformationImage = UIImageView()
     let privacyPolicyButton = UIButton()
     let privacyImage = UIImageView()
+    let ratingAppButton = UIButton()
+    let ratingAppImage = UIImageView()
     let exitImage = UIImageView()
     let helpFaqImage = UIImageView()
     let helpFaqButton = UIButton()
@@ -21,11 +23,12 @@ class AccountViewController: UIViewController {
         configExit()
         setConfigOfAccess()
         configAdminButton()
-        configProfile()
-        configProfileImage()
+        configLabelsAndLineViewOfProfile()
+        configAvatarImage()
         configpPrivacyPolicyButton()
         configAccountInformation()
         configHelpButton()
+        configRatingAppButton()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -36,12 +39,12 @@ class AccountViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
     }
     private func addSubViews() {
-        [profileLabel,avatarImage,userNameLabel,lineOfView,accountInformationButton,accountInformationImage,privacyPolicyButton,privacyImage,adminButton,exitImage,imageAdminButton,helpFaqButton,helpFaqImage].forEach {
+        [profileLabel,avatarImage,userNameLabel,lineOfView,accountInformationButton,accountInformationImage,privacyPolicyButton,privacyImage,adminButton,exitImage,imageAdminButton,helpFaqButton,helpFaqImage, ratingAppButton, ratingAppImage].forEach {
             self.view.addSubview($0)
         }
     }
     private func setConstraions(){
-        [profileLabel,avatarImage,userNameLabel,lineOfView,accountInformationButton,accountInformationImage,privacyPolicyButton,privacyImage,adminButton,exitImage,imageAdminButton,helpFaqButton,helpFaqImage].forEach{
+        [profileLabel,avatarImage,userNameLabel,lineOfView,accountInformationButton,accountInformationImage,privacyPolicyButton,privacyImage,adminButton,exitImage,imageAdminButton,helpFaqButton,helpFaqImage, ratingAppButton, ratingAppImage].forEach{
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         NSLayoutConstraint.activate([
@@ -95,11 +98,24 @@ class AccountViewController: UIViewController {
             helpFaqButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -18),
             helpFaqButton.heightAnchor.constraint(equalToConstant: 44)
         ])
+        
         NSLayoutConstraint.activate([
             helpFaqImage.topAnchor.constraint(equalTo: self.privacyPolicyButton.bottomAnchor, constant: 32),
             helpFaqImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24),
             helpFaqImage.heightAnchor.constraint(equalToConstant: 20),
             helpFaqImage.widthAnchor.constraint(equalToConstant: 20)
+        ])
+        NSLayoutConstraint.activate([
+            ratingAppButton.topAnchor.constraint(equalTo: self.helpFaqButton.bottomAnchor, constant: 20),
+            ratingAppButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 18),
+            ratingAppButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -18),
+            ratingAppButton.heightAnchor.constraint(equalToConstant: 44)
+        ])
+        NSLayoutConstraint.activate([
+            ratingAppImage.topAnchor.constraint(equalTo: self.helpFaqButton.bottomAnchor, constant: 32),
+            ratingAppImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 24),
+            ratingAppImage.heightAnchor.constraint(equalToConstant: 20),
+            ratingAppImage.widthAnchor.constraint(equalToConstant: 20)
         ])
         NSLayoutConstraint.activate([
             adminButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -160),
@@ -127,7 +143,17 @@ class AccountViewController: UIViewController {
         helpFaqButton.setTitleColor(.white, for: .normal)
         helpFaqButton.addTarget(self, action: #selector(HelpFAQTapped), for: .touchUpInside)
         helpFaqImage.image = UIImage(named: "ImageOfChats")
-        
+    }
+    private func configRatingAppButton() {
+        ratingAppButton.setTitle("Rating App", for: .normal)
+        ratingAppButton.backgroundColor = .blueGray
+        ratingAppButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
+        ratingAppButton.setTitleColor(.white, for: .normal)
+        ratingAppButton.addTarget(self, action: #selector(ratingAppButtonIsPressed), for: .touchUpInside)
+        ratingAppImage.image = UIImage(named: "ImageRatingApp")
+    }
+    @objc private func ratingAppButtonIsPressed(_ gesture: UITapGestureRecognizer) {
+        navigationController?.show(ListRatingViewController(), sender: nil)
     }
     private func configExit(){
         if let image = UIImage(systemName: "figure.walk.departure") {
@@ -135,12 +161,12 @@ class AccountViewController: UIViewController {
             exitImage.tintColor = UIColor.white
         }
        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(exitImageTapped))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(exitImageIsPressed))
         exitImage.isUserInteractionEnabled = true
         exitImage.addGestureRecognizer(tapGesture)
     }
     
-    @objc private func exitImageTapped() {
+    @objc private func exitImageIsPressed() {
         navigationController?.pushViewController(LoginVC(), animated: true)
     }
     @objc private func HelpFAQTapped() {
@@ -154,7 +180,7 @@ class AccountViewController: UIViewController {
         accountInformationButton.setTitle("Account Information", for: .normal)
         accountInformationButton.backgroundColor = .blueGray
         accountInformationButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
-        accountInformationImage.image = UIImage(named: "ImageThirdTabBar")
+        accountInformationImage.image = UIImage(named: "ImageOfAccountInformation")
         accountInformationButton.addTarget(self, action: #selector(accountInformationButtonIsPressed), for: .touchUpInside)
     }
     private func configpPrivacyPolicyButton(){
@@ -163,10 +189,10 @@ class AccountViewController: UIViewController {
         privacyPolicyButton.backgroundColor = .blueGray
         privacyPolicyButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
         privacyPolicyButton.setTitleColor(.white, for: .normal)
-        privacyPolicyButton.addTarget(self, action: #selector(sharePolicy), for: .touchUpInside)
+        privacyPolicyButton.addTarget(self, action: #selector(privacyPolicyButtonIsPressed), for: .touchUpInside)
     }
     
-    @objc public func sharePolicy() {
+    @objc public func privacyPolicyButtonIsPressed() {
         if let url = URL(string: "https://www.themoviedb.org/dmca-policy") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
@@ -184,14 +210,14 @@ class AccountViewController: UIViewController {
         }
         adminButton.addTarget(self, action: #selector(adminButtonIsPressed), for: .touchUpInside)
     }
-    private func configProfile(){
+    private func configLabelsAndLineViewOfProfile(){
         [profileLabel,userNameLabel].forEach{
             $0.textColor = .white
             $0.font = UIFont(name: "Heebo-SemiBold", size: 24)
         }
         lineOfView.backgroundColor = .black
     }
-    private func configProfileImage(){
+    private func configAvatarImage(){
         avatarImage.tintColor = .white
         avatarImage.layer.cornerRadius = 45
         avatarImage.backgroundColor = .black

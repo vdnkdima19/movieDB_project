@@ -103,158 +103,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1636500E-B0D9-4ED3-93FB-43BB015C05F0"
+            uuid = "2397EB37-76A2-4AD4-8DEC-A290739CC015"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MovieDB/Controllers/MovieVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "354"
-            endingLineNumber = "354"
-            landmarkName = "fetchMoviesInfoWithGenres(genre_id:onClearArray:numOfPage:isComingSoon:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "1636500E-B0D9-4ED3-93FB-43BB015C05F0 - 76b1ddda310851fc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MovieDB.MovieVC.fetchMoviesInfoWithGenres(genre_id: Swift.Array&lt;Swift.Int&gt;, onClearArray: Swift.Bool, numOfPage: Swift.Int, isComingSoon: Swift.Bool) -&gt; ()"
-                  moduleName = "MovieDB"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dmitryvdovenko/Desktop/MovieDB/MovieDB/Controllers/MovieVC.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "356"
-                  endingLineNumber = "356"
-                  offsetFromSymbolStart = "156">
-               </Location>
-               <Location
-                  uuid = "1636500E-B0D9-4ED3-93FB-43BB015C05F0 - 24caa72cc3fdd2e8"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "default argument 1 of MovieDB.MovieVC.fetchMoviesInfoWithGenres(genre_id: Swift.Array&lt;Swift.Int&gt;, onClearArray: Swift.Bool, numOfPage: Swift.Int, isComingSoon: Swift.Bool) -&gt; ()"
-                  moduleName = "MovieDB"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dmitryvdovenko/Desktop/MovieDB/MovieDB/Controllers/MovieVC.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "355"
-                  endingLineNumber = "355"
-                  offsetFromSymbolStart = "4">
-               </Location>
-               <Location
-                  uuid = "1636500E-B0D9-4ED3-93FB-43BB015C05F0 - 8f8248386b78b696"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "default argument 3 of MovieDB.MovieVC.fetchMoviesInfoWithGenres(genre_id: Swift.Array&lt;Swift.Int&gt;, onClearArray: Swift.Bool, numOfPage: Swift.Int, isComingSoon: Swift.Bool) -&gt; ()"
-                  moduleName = "MovieDB"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dmitryvdovenko/Desktop/MovieDB/MovieDB/Controllers/MovieVC.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "355"
-                  endingLineNumber = "355"
-                  offsetFromSymbolStart = "4">
-               </Location>
-               <Location
-                  uuid = "1636500E-B0D9-4ED3-93FB-43BB015C05F0 - d92650b69fbe6097"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "default argument 2 of MovieDB.MovieVC.fetchMoviesInfoWithGenres(genre_id: Swift.Array&lt;Swift.Int&gt;, onClearArray: Swift.Bool, numOfPage: Swift.Int, isComingSoon: Swift.Bool) -&gt; ()"
-                  moduleName = "MovieDB"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dmitryvdovenko/Desktop/MovieDB/MovieDB/Controllers/MovieVC.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "355"
-                  endingLineNumber = "355"
-                  offsetFromSymbolStart = "8">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "DF2B8564-DDFB-4279-B146-18831FE8D51D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MovieDB/Controllers/MovieVC.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "360"
-            endingLineNumber = "360"
-            landmarkName = "fetchMoviesInfoWithGenres(genre_id:onClearArray:numOfPage:isComingSoon:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "DFBA70F4-0BDB-4C83-9B8B-8C9E3BD4724B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MovieDB/Controllers/AccountVC&apos;s/MovieTabBarController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "viewWillAppear(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "4C726735-8D42-44CE-9751-CFF7A00A6C4C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MovieDB/Controllers/AccountVC&apos;s/AccountViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "viewDidLayoutSubviews()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D20EDD97-F88F-428A-812B-20687EB1DC7D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MovieDB/Controllers/AccountVC&apos;s/NavigationController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "7"
-            endingLineNumber = "7"
-            landmarkName = "viewDidLayoutSubviews()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "04AEE6B5-DCE1-4D5C-AA6B-7C3DEB1C3087"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MovieDB/Controllers/AccountVC&apos;s/NavigationController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "8"
-            endingLineNumber = "8"
-            landmarkName = "viewDidLayoutSubviews()"
+            startingLineNumber = "350"
+            endingLineNumber = "350"
+            landmarkName = "fetchMoviesInfo(numOfPage:onClearArray:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

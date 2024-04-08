@@ -1,8 +1,10 @@
-//
-//  listOfRecomendationMovies.swift
-//  DimaProjectForEducation
-//
-//  Created by Dmitry Vdovenko on 31.03.2024.
-//
-
 import Foundation
+import RealmSwift
+import UIKit
+
+class ListOfRecomendationMovies: Object {
+    @objc dynamic var username: String = ""
+    @objc dynamic var filmId: Int = 0
+    @objc dynamic var filmStatus: Int = 0
+}
+

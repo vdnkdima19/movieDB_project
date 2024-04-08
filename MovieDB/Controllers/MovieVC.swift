@@ -28,7 +28,7 @@ class MovieVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: false)
-        self.navigationController?.navigationBar.isHidden = true
+
         addSubViews()
         configSearchTextField()
         configFilterButton()
@@ -38,6 +38,9 @@ class MovieVC: UIViewController {
         segControl.backgroundColor = .darkBlue
         searchTextField.delegate = self
         segControl.addTarget(self, action: #selector(segmentValueChanged(_:)), for: .valueChanged)
+        
+        FavoriteMovies.shared.reloadArr(allMovies: moviesInfo, username: LoginUser.shared.user?.username ?? "")
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -250,7 +253,7 @@ extension MovieVC: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let filmInfo = moviesInfo[indexPath.row]
-        let page = PageOfMovieVC(filmInfo: filmInfo)
+        let page = PageOfMovieVC(filmInfo: filmInfo, allMoviews: moviesInfo)
         navigationController?.show(page, sender: nil)
         //    navigationController?.pushViewController(page, animated: true)
     }
@@ -345,6 +348,7 @@ extension MovieVC: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
                     }
                     self.moviesInfo += results
                     self.movieCollectionView.reloadData()
+                    FavoriteMovies.shared.reloadArr(allMovies: self.moviesInfo, username: LoginUser.shared.user?.username ?? "")
                 }
             case .failure(let error):
                 print("Error: \(error)")

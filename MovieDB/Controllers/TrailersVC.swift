@@ -35,7 +35,6 @@ class TrailersVC: UIViewController, TraillersVCProtocol {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.darkBlue
         self.setTitleNavBar(text: "Videos")
-        
         setupElements()
     }
     

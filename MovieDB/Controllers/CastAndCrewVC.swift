@@ -35,7 +35,6 @@ class CastAndCrewVC: UIViewController, CastAndCrewVCProtocol {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.darkBlue
         self.setTitleNavBar(text: "Cast & Crew")
-        
         setupElements()
     }
     

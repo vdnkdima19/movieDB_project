@@ -24,8 +24,8 @@ class UpdateLoginViewController: UIViewController {
         addSubViews()
         setConstraions()
         setConfigOfAccess()
-        configProfileImage()
-        configTextLabel()
+        configAvatarImage()
+        configUsernameField()
         configChangeImageButton()
         configDropImageButton()
         configLabels()
@@ -93,7 +93,7 @@ class UpdateLoginViewController: UIViewController {
         ])
         
     }
-    private func configTextLabel() {
+    private func configUsernameField() {
         userNameField.delegate = self
         userNameField.textColor = .white
         let paddingInField: CGFloat = 10
@@ -113,7 +113,7 @@ class UpdateLoginViewController: UIViewController {
         }
         userTextLabel.text = "USER NAME"
     }
-    private func configProfileImage(){
+    private func configAvatarImage(){
         avatarImage.tintColor = .white
         avatarImage.layer.cornerRadius = 45
         avatarImage.backgroundColor = .black
@@ -146,7 +146,7 @@ class UpdateLoginViewController: UIViewController {
         saveChangeButton.setTitleColor(.white, for: .normal)
         saveChangeButton.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: 18)
         
-        saveChangeButton.addTarget(self, action: #selector(saveChangeButtonTapped), for: .touchUpInside)
+        saveChangeButton.addTarget(self, action: #selector(saveChangeButtonIsPressed), for: .touchUpInside)
     }
     
     private func setConfigOfAccess(){
@@ -177,7 +177,7 @@ class UpdateLoginViewController: UIViewController {
     }
 
 
-    @objc private func saveChangeButtonTapped(_ sender: UIButton) {
+    @objc private func saveChangeButtonIsPressed(_ sender: UIButton) {
         guard let newUsername = userNameField.text, !newUsername.isEmpty else {
             return
         }
